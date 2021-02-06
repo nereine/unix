@@ -1,0 +1,108 @@
+# reload sxhkd
+ctrl + shift + r
+	pkill -USR1 -x sxhkd
+# quit/restart bspwm
+alt + shift + r
+# my own power script
+alt + 0
+	$HOME/bin/dmenupower
+# disable/enable Synaptics touchpad
+alt + t
+	$HOME/bin/dmenutouchpad
+# my own bookmark script
+alt + b
+	$HOME/bin/dmenufirefox
+alt + g
+# google search
+	$HOME/bin/dmenusearch
+alt + s
+# google search
+	$HOME/bin/dmenussh
+# terminal emulator
+alt + {_,shift +,control +} Return
+	{alacritty,st,urxvt}
+# program launcher
+alt + d
+	dmenu_run
+#alt + r
+#	rofi -show
+# alt + F5
+	brightnessctl set 5%-
+# alt + F6
+	brightnessctl set 5%+
+
+# bspwm hotkeys
+	bspc wm -r
+alt + shift + q
+	bspc quit
+# close and kill
+alt + q
+	bspc node --close
+# alternate between tiled and monocle layout
+alt + m
+	bspc desktop -l next
+# send newest marked node to newest preselected node
+alt + y
+	bspc node newest.marked.local -n newest.!automatic.local
+# swap current node and biggest node
+alt + s
+#   bspc node -s pointed
+	bspc node -s biggest
+# state/flags
+# set window state
+alt + shift + {t,p,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+# set node flags
+alt + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+# focus/swap
+# focus node in given direction
+alt + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+alt + {_,shift + }{Left,Down,Up,Right}
+	bspc node -{f,s} {west,south,north,east}
+# focus node for given path jump
+alt + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+# focus next/previous node in current desktop
+alt + n
+	bspc node -f {last}
+# focus next/previous desktop in current monitor
+alt + {o,i}
+	bspc desktop -f {prev,next}.local
+# focus last node/desktop
+alt + {_,shift+ }Tab
+	bspc node -f {next,prev}.local
+# focus older or newer node in focus history
+alt + bracket{left,right}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+# focus or send to given desktop
+alt + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+## Preselection
+# preselect direction
+super + {Left,Down,Up,Right}
+	bspc node -p {west,south,north,east}
+# preselect ratio
+super + {1-9}
+	bspc node -o 0.{1-9}
+# cancel preselection for focused node
+super + Escape
+	bspc node -p cancel
+# cancel preselection for focused desktop
+super + shift + Escape
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+## Move/resize floating (hotkeys). Consult bspwmrc for mouse resize
+# move a floating window
+super + shift + {h,j,k,l}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+# expand a floating window by moving one of its side outward
+super + shift + {Left,Down,Up,Right}
+	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+# contract a floating window by moving one of its side inward
+super + ctrl + {Left,Down,Up,Right}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}

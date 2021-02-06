@@ -1,0 +1,191 @@
+### Autostart
+# Idle and screenlock (when first 'timeout 300', shows blackscreen - but when resume from sleep, use default swaylock config)
+exec swayidle -w timeout 300 'swaylock' timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock'
+
+### Output
+default_orientation auto
+#output * resolution --custom 1920x1080
+font pango:hack 12
+gaps inner 6
+gaps outer 6
+default_border pixel 4
+default_floating_border pixel 2
+titlebar_border_thickness 0
+
+# From 'iceberg' theme (bright)
+set $blue "#91acd1"
+set $cyan "#95c4ce"
+set $white "#efefef"
+set $black "#111111"
+set $green "#c0ca8e"
+set $magenta "#ada0d3"
+# Some colors have shades (red1/yellow1 is OpenBSD colors)
+set $red0 "#e98989"
+set $red1 "#cf4229"
+set $dark0 "#333333"
+set $dark1 "#6f6f6f"
+set $yellow0 "#e9b189"
+set $yellow1 "#f2ca30"
+
+# client.<class> <border> <background> <text> [<indicator> [<child_border>]]
+client.focused $blue $blue $black $yellow1
+#output * bg #000000 solid_color
+output "*" bg /z14/wall/joi2.jpg fill
+
+# Assignments (window rules)
+#for_window [app_id="librewolf"] move container to workspace 3
+
+# DIY menubar
+bar {
+	position top
+	font pango:hack 14
+	#status_command while date +'%Y-%m-%d %l:%M:%S %p'; do sleep 1; done
+	status_command dash ${HOME}/.config/dwm/dwmbar.sh
+
+	colors {
+		statusline $blue
+		background $black
+		focused_workspace $dark0 $blue $dark0
+		inactive_workspace $dark0 $dark0 $blue
+	}
+}
+
+### Input (sway-input(5))
+## Trackpad (general)
+input type:touchpad {
+	# tap to click
+	tap enabled
+	# natural scroll
+	natural_scroll enabled
+}
+
+## Input languages
+# super+space to change input
+input * {
+	xkb_layout "us,th"
+	xkb_options "grp:win_space_toggle"
+}
+
+## Keyboards
+set $left h
+set $down j
+set $up k
+set $right l
+# Nod4 for Super
+set $mod Mod1
+set $term alacritty
+set $menu dmenu
+
+## media keybindings (--locked allows keybindings in lockscreen)
+bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
+bindsym --locked XF86MonBrightnessUp exec brightnessctl set +5%
+bindsym --locked XF86AudioPlay exec playerctl play-pause
+bindsym --locked XF86AudioNext exec playerctl next
+bindsym --locked XF86AudioPrev exec playerctl previous
+## wm keybindings - note that I try to match my sxhkdrc here, so it may not seem to make sense, but it's in my muscle memory now
+bindsym $mod+Return exec $term
+bindsym $mod+Shift+r reload
+bindsym $mod+Shift+q exit
+bindsym $mod+q kill
+# layout bindings
+bindsym $mod+Shift+Space layout toggle all
+bindsym $mod+Shift+t layout default
+bindsym $mod+Shift+b border toggle
+bindsym $mod+e layout toggle split
+bindsym $mod+w layout tabbed
+bindsym $mod+s layout stacking
+# split bindings
+bindsym $mod+Space split toggle
+bindsym $mod+Shift+s floating toggle
+bindsym $mod+Shift+f fullscreen toggle
+
+## directional focus and move
+bindsym $mod+Tab focus mode_toggle
+bindsym $mod+bracketleft focus prev
+bindsym $mod+bracketright focus next
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+# vim-key directional focus and move
+# --to-code is used to prevent failure on secondary input layout (ie for vim keys navigation)
+bindsym --to-code {
+	$mod+$left focus left
+	$mod+$down focus down
+	$mod+$up focus up
+	$mod+$right focus right
+}
+bindsym --to-code {
+	$mod+Shift+$left move left
+	$mod+Shift+$down move down
+	$mod+Shift+$up move up
+	$mod+Shift+$right move right
+}
+
+# switch to workspace
+bindsym $mod+1 workspace number 1
+bindsym $mod+2 workspace number 2
+bindsym $mod+3 workspace number 3 :Browser
+bindsym $mod+4 workspace number 4
+bindsym $mod+5 workspace number 5
+bindsym $mod+6 workspace number 6
+bindsym $mod+7 workspace number 7
+bindsym $mod+8 workspace number 8
+bindsym $mod+9 workspace number 9
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number 1
+bindsym $mod+Shift+2 move container to workspace number 2
+bindsym $mod+Shift+3 move container to workspace number 3
+bindsym $mod+Shift+4 move container to workspace number 4
+bindsym $mod+Shift+5 move container to workspace number 5
+bindsym $mod+Shift+6 move container to workspace number 6
+bindsym $mod+Shift+7 move container to workspace number 7
+bindsym $mod+Shift+8 move container to workspace number 8
+bindsym $mod+Shift+9 move container to workspace number 9
+# move the currently focused window to the scratchpad
+bindsym $mod+Shift+minus move scratchpad
+# show the next scratchpad window or hide the focused scratchpad window. If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+minus scratchpad show
+
+# Resizing windows
+mode resize {
+	# left will shrink the containers width
+	# right will grow the containers width
+	# up will shrink the containers height
+	# down will grow the containers height
+	bindsym $left resize shrink width 10px
+	bindsym $down resize grow height 10px
+	bindsym $up resize shrink height 10px
+	bindsym $right resize grow width 10px
+
+	# Ditto, with arrow keys
+	bindsym Left resize shrink width 10px
+	bindsym Down resize grow height 10px
+	bindsym Up resize shrink height 10px
+	bindsym Right resize grow width 10px
+	# Return to default mode
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Drag floating windows by holding down $mod and left mouse button. Resize them with right mouse button + $mod. Change 'normal' to 'inverse' to use left mouse button for resizing and right mouse button for dragging.
+floating_modifier $mod normal
+
+## keybindings for my dmenu (wofi) scripts
+bindsym $mod+0 exec $HOME/bin/dmenupower
+bindsym $mod+b exec $HOME/bin/dmenufirefox
+bindsym $mod+g exec $HOME/bin/dmenusearch
+bindsym $mod+z exec $HOME/bin/dmenussh
+bindsym $mod+t exec $HOME/bin/dmenutouchpad
+bindsym $mod+d exec wofi --show run
+
+#include @sysconfdir@/sway/config.d/*

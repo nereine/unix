@@ -1,0 +1,56 @@
+#!/bin/sh
+# cattmp - stupid cpu temperature monitor utility
+
+watch_cat() {
+	# Our tempperature file
+	f='/sys/class/thermal/thermal_zone0/temp';
+
+	if [ -f $f ]; then
+		watch cat $f;
+	else
+		printf "%s not found\n" "$f";
+	fi
+}
+
+main() {
+	case "$(uname)" in
+		'Darwin')
+			if [ -n "$(command -v osx-cpu-temp)" ]; then
+				while true;
+					do osx-cpu-temp;
+					sleep 1;
+				done;
+			else
+				printf "%s\n" "Please first install osx-cpu-temp" "If Homebrew is installed: brew install osx-cpu-temp";
+				exit 1;
+			fi
+			;;
+		*)
+			if [ -n "$(command -v sensors)" ]; then
+				watch sensors;
+			else
+				watch_cat;
+			fi
+			;;
+	esac
+}
+
+case "$1" in
+	*h*)
+		less << _EOF_ 
+On Linux systems, cattmp by default is used to monitor lmsensors,
+though it can also run watch command on temperature files in /sys/class/thermal
+
+On macOS systems, cattmp uses 'osx-cpu-temp' to print current CPU temperature every 1 second
+Homebrew can be used to install osx-cpu-temp: brew install osx-cpu-temp
+
+Supply *h* to view this help page, e.g. cattmp h
+Press Q to exit this help page
+_EOF_
+		exit ;;
+	# 'cattmp cat' will not use lm_sensors or osx-cpu-temp
+	'cat')
+		watch_cat ;;
+	*)
+		main ;;
+esac

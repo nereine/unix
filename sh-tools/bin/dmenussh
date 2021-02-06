@@ -1,0 +1,10 @@
+#!/bin/sh
+
+aliases="$HOME/.config/shell/aliases";
+[ -r $aliases ]\
+&& . $aliases;
+
+bookmark="$HOME/bin/priv/dmenussh.hosts";
+rhost="$(dmenu -i -p 'Enter URL or file' < "$bookmark")";
+
+test -n "$rhost" && alacritty -e ssh "$rhost";

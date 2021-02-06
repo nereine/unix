@@ -1,0 +1,6 @@
+xsetroot -cursor_name left_ptr &
+picom -b &
+xfce4-power-manager &
+volumeicon &
+tint2 &
+~/.fehbg

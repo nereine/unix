@@ -1,0 +1,12 @@
+[Unit]
+Description=Lock Sway session using swaylock and swaymsg for user %i
+Before=sleep.target
+
+[Service]
+User=%i
+Environment=DISPLAY=:0
+ExecStartPre=swaymsg "output * dpms off
+ExecStart=/usr/bin/swaylock
+
+[Install]
+WantedBy=sleep.target

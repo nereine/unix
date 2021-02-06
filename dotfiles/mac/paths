@@ -1,0 +1,10 @@
+/usr/local/opt/openssl/bin
+/usr/local/opt/sqlite/bin
+/usr/local/opt/ruby/bin
+/usr/local/opt/curl/bin
+/usr/local/bin
+/usr/local/sbin
+/usr/bin
+/bin
+/usr/sbin
+/sbin

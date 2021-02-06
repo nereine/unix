@@ -1,0 +1,12 @@
+# macOS path can be more easily edited in /etc/paths
+# FreeBSD path can be more easily edited at /etc/login.conf, run cap_mkdb /etc/login.conf afterwards
+
+# Add /home/user/bin to $PATH
+[ -d "$HOME/bin" ]\
+&& export PATH="$HOME/bin:$PATH";
+
+# Prepend CCACHE libraries to $PATH
+command -v ccache > /dev/null 2>&1\
+&& export PATH="/usr/lib/ccache/bin/:$PATH"\
+&& export CCACHE_DIR=/tmp/ccache\
+|| return 0;

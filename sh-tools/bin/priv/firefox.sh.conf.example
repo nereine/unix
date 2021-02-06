@@ -1,0 +1,11 @@
+#!/usr/bin/env sh
+# firefox.sh.conf - initialize environment table for firefox
+
+# Touchscreen support
+#MOZ_USE_XINPUT2=1
+# Webrenderer
+#MOZ_WEBRENDER=1
+# VA-API for X11
+#MOZ_X11_EGL=1
+# Wayland support (also include VA-API)
+#MOZ_ENABLE_WAYLAND=1

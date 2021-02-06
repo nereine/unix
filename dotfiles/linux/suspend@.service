@@ -1,0 +1,13 @@
+[Unit]
+Description=User suspend actions
+Before=resume.target
+
+[Service]
+User=%I
+Type=forking
+Environment=DISPLAY=:0
+#ExecStartPre= -/usr/bin/pkill -u %u unison ; /usr/local/bin/music.sh stop
+ExecStart=/usr/bin/slock
+
+[Install]
+WantedBy=sleep.target

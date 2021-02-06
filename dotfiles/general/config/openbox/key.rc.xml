@@ -1,0 +1,58 @@
+    <!-- Copy the content of this file to relevant <keyboard> section of rc.xml -->
+    <chainQuitKey>C-g</chainQuitKey>
+    <keybind key="A-S-r">
+      <action name="Execute">
+        <command>openbox --reconfigure</command>
+      </action>
+    </keybind>
+    <keybind key="C-A-e">
+      <action name="Exit">
+        <prompt>no</prompt>
+      </action>
+    </keybind>
+    <keybind key="A-S-q">
+      <action name="Exit">
+        <prompt>no</prompt>
+      </action>
+    </keybind>
+    <keybind key="A-d">
+      <action name="Execute">
+        <command>dmenu_run</command>
+      </action>
+    </keybind>
+    <keybind key="A-0">
+      <action name="Execute">
+        <command>$HOME/bin/dmenupower</command>
+      </action>
+    </keybind>
+    <keybind key="A-b">
+      <action name="Execute">
+        <command>$HOME/bin/dmenufirefox</command>
+      </action>
+    </keybind>
+    <keybind key="A-g">
+      <action name="Execute">
+        <command>$HOME/bin/dmenusearch</command>
+      </action>
+    </keybind>
+    <keybind key="A-t">
+      <action name="Execute">
+        <command>$HOME/bin/dmenutouchpad</command>
+      </action>
+    </keybind>
+    <keybind key="A-L">
+      <action name="Execute">
+        <command>rofi -monitor primary -show run</command>
+      </action>
+    </keybind>
+    <keybind key="A-Return">
+      <action name="Execute">
+        <command>st</command>
+      </action>
+    </keybind>
+    <keybind key="A-S-Return">
+      <action name="Execute">
+        <command>urxvt</command>
+      </action>
+    </keybind>
+  </keyboard>

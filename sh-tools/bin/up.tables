@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# up is a simple cross-platform shell script for package/system upgrade
+# up.tables is a files containing command tables for up
+
+##	Synopsis
+#	nameFunction() {
+#		typeset -A nameTable
+#		nameTable[OS_0]="action for OS_0";
+#		nameTable[OS_1]="action for OS_1";
+#
+#		## Note that OS variable ($OS) is from dotfiles/general/.bash_profile
+#		You can get .bash_profile from https://gitlab.com/artnoi-staple/unix
+#		
+#		cmddesc+="Description for action for selected OS"		
+#		# Prompt user for confirmation, else exit right away
+#		upprompt;
+#		# Assign command to cmd variable based on OS
+#		cmd+="${nameTable[$OS]}";
+#	}
+
+## The command in this table is used to "update" the package database
+upupdate() {
+	typeset -A updateTable;
+	updateTable[desc]="Check for new packages (or in some systems, update package database)";
+	updateTable[Darwin]="brew update";
+	updateTable[OpenBSD]="doas pkg_add -Uun";
+	updateTable[Debian]="sudo apt update";
+	updateTable[Arch]="checkupdates";
+	updateTable[Void]="sudo xbps-install -Suv";
+	updateTable[Redhat]="sudo dnf check-update";
+	
+	# Assign $cmd and its description
+	cmddesc+="${updateTable[desc]}";
+	cmd+="${updateTable[$OS]}";
+}
+
+## The commands in this table are used to "list" outdated packages
+uplist() {
+	typeset -A uplistTable;
+	uplistTable[desc]="List outdated packages";
+	uplistTable[Darwin]="brew outdated";
+	uplistTable[OpenBSD]="doas pkg_add -Uun";
+	uplistTable[Debian]="sudo apt list --upgradeable";
+	uplistTable[Arch]="checkupdates;yay -Qu";
+	uplistTable[Void]="";
+	uplistTable[Redhat]="sudo dnf check-update";
+	
+	# Assign $cmd and its description
+	cmddesc+="${uplistTable[desc]}";
+	cmd+="${uplistTable[$OS]}";
+}
+
+## The commands in this table are used to upgrade the outdated packages
+upupgrade() {
+	typeset -A upgradeTable;
+	upgradeTable[desc]="Upgrade packages";
+	upgradeTable[Darwin]="brew upgrade";
+	upgradeTable[OpenBSD]="doas pkg_add -Uu";
+	upgradeTable[FreeBSD]="sudo pkg update";
+	upgradeTable[Debian]="sudo apt upgrade";
+	upgradeTable[Arch]="yay -Syu";
+	upgradeTable[Void]="sudo xbps-install -Suv";
+	upgradeTable[Redhat]="sudo dnf update";
+	
+	# Assign $cmd and its description
+	cmddesc+="${upgradeTable["desc"]}";
+	cmd+="${upgradeTable[$OS]}";
+}
+
+## The commands in this table are used to upgrade system software
+upsys() {
+	typeset -A upsysTable;
+	upsysTable[desc]="Upgrade system software";
+	upsysTable[Darwin]="softwareupdate -i -a";
+	upsysTable[OpenBSD]="doas fw_update;doas syspatch";
+	upsysTable[FreeBSD]="sudo freebsd-update fetch install";
+	upsysTable[Debian]="sudo apt full-upgrade";
+	upsysTable[Arch]="yay -Syyuu";
+	upsysTable[Void]="";
+	upsysTable[Redhat]="sudo dnf upgrade --refresh";
+	
+	# Assign $cmd and its description
+	cmddesc+="${upsysTable["desc"]}";
+	cmd+="${upsysTable[$OS]}";
+}
+
+## The commands in this table are used to clean old files from unwanted/outdated packages
+upclean() {
+	typeset -A cleanTable;
+	cleanTable[desc]="Clean unwanted and outdated package cache and files";
+	cleanTable[Darwin]="brew cleanup";
+	cleanTable[OpenBSD]="doas pkg_delete -a";
+	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
+	cleanTable[Debian]="sudo apt autoremove;sudo apt autoclean";
+	cleanTable[Arch]="pacman_cleanorphans;yay -Sc"; # will use upbefore()
+	cleanTable[Void]="sudo xbps-remove -Oo";
+	cleanTable[Redhat]="sudo dnf autoremove;sudo dnf clean all";
+	
+	# Assign $cmd and its description
+	cmddesc+="${cleanTable["desc"]}";
+	cmd+="${cleanTable[$OS]}";
+}
+
+## Special commands not included in the generic tables
+upspecial() {
+	# Unlike other *Table(s) above, ${specTable[]} uses does not have its own $cmddesc
+	# Instead, $cmddesc is made by putting the actual command line into a pre-formatted string
+	typeset -A specTable
+	
+	## Synopsis
+	# $put_your_arbitary_logic_here
+	# specTable[desc]="Your arbitary special command desciption"
+	# specTable[$matching_argument]+="Your arbitary shell command(s)"
+	## Example below shows testing $OS==Arch and then put "yay -Syu" into the table with y as the index or argument
+	
+	# See https://gitlab.com/artnoi-staple/unix/sh-tools/bin/up-git
+	specTable[git]="up-git";
+	# Arch Linux yay
+	specTable[aur]+="yay -Syu";
+	specTable[y]+="yay -Syu";
+	
+	# Assign $cmd and its description
+	cmddesc+="Special command: ${specTable[$1]}";
+	cmd+="${specTable[$1]}";
+}
+
+## upbefore() - Run commands "before" $cmd
+# It is now used to fix up design flaw of not allowing more than 2 commands per $cmd. It may also be used to handle command strings that the shell had difficulty expanding correctly
+upbefore(){
+	# If $cmd contains one of these $deli character, expand $cmd into $newcmd, and then copy $newcmd to $cmd (overwrite)
+	deli=(';' '&&' '||')
+	for c in "${deli[@]}"; do
+		case "${cmd[0]}" in
+			*';'*|*'&&'*)
+				IFS="$c" read -ra newcmd <<< "${cmd[0]}";
+				unset cmd;
+				# Copy $newcmd to $cmd
+				cmd=("${newcmd[@]}");
+				;;
+		esac
+	# If $cmd has the following string triggers
+		case "${cmd[0]}" in
+			'pacman_cleanorphans')
+				orphans="$(pacman -Qqdt | tr '\n' ' ')";
+				# Simply adding cmd[0]="sudo pacman -Rns $orphans|yay -Sc" in upclean() would fail due to shell expansion
+				cmd[0]="sudo pacman -Rns $orphans";
+				;;
+		esac
+	done
+}
+
+## upafter() - Run commands "after" $cmd
+# Unlike most of the function in up.tables,
+# upafter() is written as a simple shell function without arrays.
+upafter() {
+	printf "up: running post-up script upafter() for %s\n" "$OS"
+	# You can safely add your own command and logic here, as it is isolated from the rest of up.
+	if	[ "$OS" == 'Darwin' ]; then
+		simyn "up: Check for Apple updates?"\
+		&& softwareupdate -l\
+		&& simyn 'up: Perform Apple system upgrade from this shell? (Not recommended)'\
+		&& softwareupdate -i -a
+	elif [ "$OS" == 'Arch' ]; then
+		simyn 'Reload-restart systemd services?'\
+		&&	systemctl daemon-reload\
+		&&	systemctl reset-failed
+	fi
+}

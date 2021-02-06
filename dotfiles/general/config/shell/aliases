@@ -1,0 +1,48 @@
+# .config/shell/aliases
+# Shell aliases - tested on bash, ksh (mksh, loksh)
+
+# dmenu replacement on wayland
+#[ "$XDG_SESSION_TYPE" = 'wayland' ]\
+[ -n "$WAYLAND" ]\
+&& alias dmenu='/usr/bin/wofi -d';
+alias sway='export WAYLAND=1 && export MOZ_ENABLE_WAYLAND=1 && sway'
+
+# Enable aliases to be sudo/doas’ed
+alias sudo='sudo ';
+alias doas='doas ';
+
+# Easier navigation: .., ..., ...
+alias p='pwd';
+alias dl='cd ~/Downloads';
+alias dt='cd ~/Desktop';
+alias etc='cd /etc';
+alias ..='cd ..';
+alias ...='cd ../..';
+alias ....='cd ../../..';
+alias .....='cd ../../../..';
+
+# Shortcuts
+alias c='clear';
+alias v='vim';
+alias g='git';
+alias gs='git status';
+alias ga='git add';
+alias gc='git commit';
+alias gp='git push';
+alias da='doas';
+alias sx='startx';
+alias hk='less .config/sxhkd/sxhkdrc';
+alias vim='vim -i /tmp/.viminfo';
+alias tsm='transmission-remote';
+alias pingg='ping -c 1 1.1.1.1';
+
+# Reload the shell (i.e. invoke as a login shell)
+alias reload='exec ${SHELL} -l';
+
+# Print each PATH entry on a separate line
+alias path='echo -e ${PATH//:/\\n}';
+alias l='ls -lF';
+alias la='ls -lAF';
+
+# Get week number
+alias week='date +%V';

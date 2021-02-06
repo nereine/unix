@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# provides git pull script for up
+
+# Sanity checks
+[ -z $(command -v git) ]\
+&& printf "up-git: git not found, aborting..\n"\
+&& return 1;
+
+# up-git's default directory - needs fixing but for nows it works for most of the cases.
+rootdir="$HOME/git";
+defgdir=("$rootdir"/*);
+	
+# Prompt for directory
+printf "%s\n" "up-git: Enter your git directory with RELATIVE PATH below" "up-git: You can set your default git root directory" "by editing defgdir variable near up-git section" "Notice: up-git will pull subdirectories of gdir" "" "Press ENTER for default ($rootdir)";
+# Get user input
+question="up-git: git root directory (leave BLANK for DEFAULT)";
+
+# 'read -r' is not used, for compatability
+printf "%s: " "$question";
+read answer;
+
+# Assign default git directories or from answer
+[ -z "$answer" ]\
+&& gdir=("${defgdir[@]}")\
+|| gdir=("${answer[@]}")
+
+unset answer
+
+# Main loop
+for workdir in "${gdir[@]}";
+do
+	# 'git pull' in for loop
+	[ -d $workdir/.git ]\
+	&& find $workdir -name .git -print -execdir git pull --rebase \;\
+	|| find $workdir/* -name .git -print -execdir git pull --rebase \;\
+	||  printf "%s\n" "" "up-git: ${workdir} does not appear to be a git directory (.git not found)" "Not pulling ${workdir}";
+	
+	# Ask if user want to run unix/install.sh
+	[ "$workdir" == *"/unix" ]\
+	&& printf "up-git: use bash to run install.sh in %s? (y/N): " "$workdir"\
+	&& read answer\
+	&& case "$answer" in
+		Y|y)
+			prevd="$(pwd)";
+			cd "$workdir"\
+			bash $workdir/install.sh ;;
+	esac\
+	&& cd "$prevd";
+done

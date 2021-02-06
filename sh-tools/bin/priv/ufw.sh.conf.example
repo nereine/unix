@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+# ufw.sh.conf - stupid script for adding rules to iptables using ufw
+# You can simply insert your ufw rule commands below
+
+#ufw allow 22/tcp
+#ufw allow 53
+#ufw allow 80/tcp
+#ufw allow 443/tcp
+#ufw allow 6955:6969/udp

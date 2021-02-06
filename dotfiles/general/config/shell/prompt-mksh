@@ -1,0 +1,29 @@
+# Set the terminal title and prompt
+# Colors - unused colors are commented out
+orange="33m";
+yellow="33m";
+red="31m";
+cyan="36m";
+#black="30m";
+#blue="34m";
+#green="32m";
+#purple="35m";
+#violet="35m";
+#white="37m";
+
+# Default user/host colors
+userStyle="\033[${orange}$USER\033[00m"
+hostStyle="\033[${cyan}@$HOSTNAME:$PWD\033[00m"
+
+# Highlight the user name when logged in as root.
+[ "$USER" == "root" ] && userStyle="\033[${red}$USER\033[00m"
+# Highlight the hostname when connected via SSH.
+[ -n "$SSH_CLIENT" ] && hostStyle="\033[${yellow}@$HOSTNAME(remote):$PWD\033[00m"
+
+# Set the terminal title and prompt.
+PS1="$userStyle$hostStyle
+\$ ";
+export PS1;
+
+PS2="\033[${cyan}→\033[00m"
+export PS2;

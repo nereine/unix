@@ -1,0 +1,4 @@
+set softwrap
+set linenumbers
+include /usr/local/share/nano/*.nanorc
+set mouse -g

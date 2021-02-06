@@ -1,0 +1,73 @@
+#!/bin/sh
+
+# Prompt user if --now flag should be added to command
+nowprompt() {
+	# Source yn.sh which will provide simyn()
+	ynsh="$HOME/bin/yn.sh"
+	# Silently skip if ynsh is not available
+	[ ! -f $ynsh ] && return 0
+	. $ynsh
+
+	# If simyn() returns 0 (yes), declare variable $now
+	simyn "Start/stop/fix $1 now?" && now="--now"
+}
+
+main() {
+	# main() only has this 'case' statement
+	case "$1" in
+
+		# List failed systemd units
+		'f'|'failed')
+			sudo systemctl list-units --failed ;;
+
+		# ff is for Fix Failed
+		'ff'|'fix')
+			# Print failed systemd units
+			sudo systemctl list-units --failed
+			# Fix if answered yes
+			nowprompt 'failed services' &&\
+			sudo systemctl daemon-reload &&\
+			sudo systemctl reset-failed ;;
+
+		# If unit name specified as $2, show log for unit, else just run journalctl
+		'log')
+			if [ -n "$2" ]; then
+				sudo journalctl -u $2
+			else
+				sudo journalctl
+			fi	;;
+
+		'enable')
+			# nowprompt() will return $now="--now" if answered yes
+			nowprompt $2
+			sudo systemctl enable $2 $now ;;
+	
+		'disable')
+			# nowprompt() will return $now="--now" if answered yes
+			nowprompt $2
+			sudo systemctl disable $2 $now ;;
+	
+		'start')
+			sudo systemctl start $2 ;;
+		'stop')
+			sudo systemctl stop $2 ;;
+		'restart')
+			sudo systemctl restart $2 ;;
+		'reload')
+			sudo systemctl reload $2 ;;
+		'cron'|'timer')
+			sudo systemctl list-timers --all ;;
+		
+		# Default behaviour
+		'stat'|*)
+			# 'svstat' will simply run 'systemctl status'
+			if [ -z "$2" ]; then
+				sudo systemctl status $1
+			else
+			# 'svstat stat' will simply run 'systemctl status' on $2
+				sudo systemctl status $2
+			fi	;;
+	esac
+}
+
+main $1 $2

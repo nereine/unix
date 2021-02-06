@@ -1,0 +1,62 @@
+#!/bin/sh
+## dmenutouchpad - configure Synaptics Touchpad in ThinkPad laptops
+# You can just execute 'dmenutouchpad', and dmenu or wofi will launch to get your input, or you can just pass 'Off' or 'On' at the command-line (e.g. dmenutouchpad Off).
+
+# alias 'dmenu' will be assigned to 'wofi -d' when on Wayland
+aliases="$HOME/.config/shell/aliases";
+[ -r "$aliases" ]\
+&& . "$aliases";
+
+main() {
+
+if [ -n "$1" ]; then
+	
+	case "$1" in
+		'Off'|'On')
+			onoff="$1";
+			remessg="OK: WAYLAND=$WAYLAND - touchpad: $1"; ;;
+		*)
+			remessg="Expected 'Off' or 'On'"; ;;
+	esac;
+
+	# Only reply to user input if given command-line argument
+	printf "%s\n" "$remessg";
+
+else
+	# Only spawn dmenu if not given command-line argument
+	onoff="$(printf "%s\n" 'Off' 'On' | dmenu -i -p "Trackpad ($cmd):");";
+fi;
+
+case "$onoff" in
+	
+	# Run the command using 'sh -c'
+	'Off')
+		sh -c "$offcmd"; ;;
+	'On')
+		sh -c "$oncmd"; ;;
+esac;
+
+}
+
+xorg_input() {
+	cmd='xorg_input'
+	# For xf86-input-synaptics
+	offcmd="synclient TouchpadOff=1";
+	oncmd="synclient TouchpadOff=0";
+}
+
+sway_input() {
+	cmd='sway_input'
+	# Get your identifier with 'swaymsg -t get_inputs'
+	dev_id="2:7:SynPS\/2_Synaptics_TouchPad";
+	# See man sway-input(5)
+	offcmd="swaymsg input ${dev_id} events disabled";
+	oncmd="swaymsg input ${dev_id} events enabled";
+}
+
+# Get commands for X11 or Wayland
+[ -z "$WAYLAND" ]\
+&& xorg_input\
+|| sway_input;
+# Get done
+main "$1"

@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+# up is a simple cross-platform shell script for package/system upgrade
+# up is used together with the separate up.tables
+# up.tables file is used to store the command tables for ease of adding/removing command 
+# In addition to up.tables, up also requires extra shell scripts to work
+# The up.tables and script files are available from https://gitlab.com/artnoi-staple/unix
+
+## Exit if $OS variable is not available from .bash_profile
+[ -z "$OS" ]\
+&& printf 'up: could not get OS information from .bash_profile\n'\
+&& exit 1;
+
+## Sourcing external files using source.sh
+[[ "$fts_status" != 'ok' ]]\
+&& . "$(command -v 'source.sh')";
+
+uparg(){
+# uparg() will source commands from up.tables and select which to run based on argument ($1)
+# Because we use 'command -v' to find up.tables, sourcing will fail if up.tables is not in $PATH
+	
+	uptables="$(command -v 'up.tables')"\
+	&& . "$uptables";
+	
+	# User input ($1) is filtered here in case statement below
+	case "$1" in
+		'd'|'date')
+			upupdate; ;;
+		'g'|'grade')
+			upupgrade; ;;
+		'l'|'list')
+			uplist; ;;
+		's'|'sys')
+			upsys; ;;
+		'c'|'clean')
+			upclean; ;;
+		'h'|'help')
+			# Print up.tables file using less(1)
+			less "$uptables";
+			printf "$ less %s\n" "$uptables";
+			exit; ;;
+		*)
+			# If $1 does NOT match any cases above, try special command table
+			upspecial "$1"; ;;
+	esac;
+}
+
+upcmd() {
+# upcmd() will generate normal array of commands to be run ${cmd[]}
+# as well as its description ${cmddesc[]}
+	typeset -a cmd;
+	typeset -a cmddesc;
+	
+	# uparg() gets commands from up.tables based on argument (user input)
+	uparg "$1";
+	
+	# upprompt() prompts user for confirmation.
+	# upprompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
+	upprompt() {
+		# Show command description
+		printf "up: %s\n" "$d";
+		# Yes/no prompt - exit if no
+ 		simyn "Run command: $c"\
+		|| exit;
+	}
+
+	# upbefore is usually used to split long command strings in to ${cmd[]} array values
+	# Currently, it is used to split bash commands with ';' and '&&'
+	# See more info at sh-tools/bin/up.tables
+	upbefore;
+	
+	# After successful command retrieval from the tables, run commands from ${cmd[]} tables
+	# up uses for loop because it was previously anticipated to run miltiple commands queued in ${cmd[]}
+	# but unfortunately, I am too lazy to write a way to append more commands into the table
+	for c in "${cmd[@]}"; do
+		for d in "${cmddesc[@]}"; do
+			## Prompt user before running commands sourced from up.tables
+			upprompt;
+			
+			## Command $cmd ($c) is run here
+			$SHELL -c "$c";
+			
+			## Report description as done. Description will be highlighted by lines made out of "="
+			line; printf '%s: done\n' "$d"; line;
+		done;
+	done;
+	
+	# Run command after ${cmd[]}.
+	# See more info at unix/sh-tools/bin/up.tables
+	upafter;
+}
+
+main() {
+	# Only run with argument
+	if [ -n "$1" ]; then
+	# Get command list
+		upcmd $1;
+	fi;
+}
+main "$1";

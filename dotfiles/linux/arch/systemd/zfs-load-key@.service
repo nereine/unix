@@ -1,0 +1,12 @@
+[Unit]
+Description=Load ZFS encryption keys
+Before=systemd-user-sessions.service
+After=zfs-import.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/bash -c 'until (zfs load-key %I && zfs mount -a); do echo "Loading ZFS keys and Mounting ZFS datasets"; done'
+
+[Install]
+WantedBy=zfs-mount.service

@@ -1,0 +1,85 @@
+background_opacity: 1.00
+env:
+ TERM: xterm-256color
+window:
+ padding:
+  x: 2
+  y: 2
+ dynamic_padding: false
+font:
+# OS X only: use thin stroke font rendering on Retina displays; set to false on non-Retina computers
+ use_thin_strokes: false
+ size: 12
+ normal:
+   family: Inconsolata
+   style: Regular
+ bold:
+   family: Inconsolata
+   style: Bold
+ italic:
+   family: Inconsolata
+   style: Italic
+scrolling:
+ history: 5000
+ multiplier: 4
+key_bindings:
+# - { key: N,        mods: Command, command: { program: 'open', args: ['-n', '/Applications/Alacritty.app'] } }
+ - { key: T,        mods: Control, action: ScrollToTop                  }
+ - { key: B,        mods: Control, action: ScrollToBottom               }
+ - { key: PageUp,   mods: Control, action: ScrollPageUp                 }
+ - { key: U,        mods: Control, action: ScrollPageUp                 }
+ - { key: PageDown, mods: Control, action: ScrollPageDown               }
+ - { key: D,        mods: Control, action: ScrollPageDown               }
+ - { key: Up,       mods: Control, action: ScrollLineUp                 }
+ - { key: K,        mods: Control, action: ScrollLineUp                 }
+ - { key: Down,     mods: Control, action: ScrollLineDown               }
+ - { key: J,        mods: Control, action: ScrollLineDown               }
+ - { key: Key0,     mods: Command, action: ResetFontSize                }
+ - { key: RBracket, mods: Command, action: IncreaseFontSize             }
+ - { key: Equals,   mods: Command, action: IncreaseFontSize             }
+ - { key: LBracket, mods: Command, action: DecreaseFontSize             }
+ - { key: N,        mods: Command, action: SpawnNewInstance             }
+ - { key: F,        mods: Command, action: ToggleFullscreen             }
+ - { key: V,        mods: Command, action: Paste                        }
+ - { key: C,        mods: Command, action: Copy                         }
+ - { key: Paste,                   action: Paste                        }
+ - { key: Copy,                    action: Copy                         }
+ - { key: Q,        mods: Command, action: Quit                         }
+ - { key: W,        mods: Command, action: Quit                         }
+ - { key: H,        mods: Command, action: ClearHistory                 }
+ - { key: Home,                    chars: '\x1bOH',   mode: AppCursor   }
+ - { key: Home,                    chars: '\x1b[H',   mode: ~AppCursor  }
+ - { key: End,                     chars: '\x1bOF',   mode: AppCursor   }
+ - { key: End,                     chars: '\x1b[F',   mode: ~AppCursor  }
+ - { key: NumpadEnter,             chars: '\n'                          }
+
+draw_bold_text_with_bright_colors: true
+# https://github.com/alacritty/alacritty/wiki/Color-schemes
+# Colors (Iceberg Dark)
+colors:
+  # Default colors
+  primary:
+    background: '#161821'
+    foreground: '#d2d4de'
+
+  # Normal colors
+  normal:
+    black:   '#161821'
+    red:     '#e27878'
+    green:   '#b4be82'
+    yellow:  '#e2a478'
+    blue:    '#84a0c6'
+    magenta: '#a093c7'
+    cyan:    '#89b8c2'
+    white:   '#c6c8d1'
+
+  # Bright colors
+  bright:
+    black:   '#6b7089'
+    red:     '#e98989'
+    green:   '#c0ca8e'
+    yellow:  '#e9b189'
+    blue:    '#91acd1'
+    magenta: '#ada0d3'
+    cyan:    '#95c4ce'
+    white:   '#d2d4de'

@@ -1,0 +1,34 @@
+#!/bin/sh
+sxhkd &
+$HOME/.config/bspwm/autostart &
+
+bspc monitor -d I II III IV V VI VII VIII IX X
+bspc monitor --reset-desktops 1 2 3 4 5 6
+#bspc desktop '^2' --layout monocle
+
+bspc config border_width	2
+bspc config window_gap		10
+bspc config split_ratio		0.50
+bspc config top_padding		36
+bspc config gapless_monocle	true
+bspc config borderless_monocle	true
+
+# Alt+Click to resize windows
+bspc config pointer_action1	'resize_side'
+bspc config pointer_action1	'resize_corner'
+bspc config pointer_modifier 'mod1' # alt key
+
+#bspc config focus_follows_pointer	true
+#bspc config history_aware_focus	true
+
+#bspc rule -a Gimp desktop='^8' state=floating follow=on
+bspc rule -a xfce4-power-manager state=floating
+bspc rule -a volumeicon state=floating
+
+# Make windows float on specific desktops
+# https://github.com/baskerville/bspwm/issues/325
+#bspc subscribe node_manage | while read event monitor desktop nodeid ipid; do
+#	case "$desktop" in
+#		3|4)	bspc node "$nodeid" --state floating ;;
+#	esac
+#done &
