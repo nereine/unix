@@ -4,4 +4,4 @@ aliases="$HOME/.config/shell/aliases";
 [ -r $aliases ]\
 && . $aliases;
 
-case "$(printf "%s\n" "lock" "hybrid-sleep" "suspend" "hibernate" "restart" "shutdown" | dmenu -i -p 'System action:')" in "shutdown") sudo systemctl poweroff ;; "hybrid-sleep") sudo systemctl hybrid-sleep ;; "restart") sudo systemctl reboot ;; "suspend") sudo systemctl suspend ;; "hibernate") sudo systemctl hibernate ;; "lock") slock ;; esac # for this to work you may need to edit sudoer file.
+case "$(printf "%s\n" "lock" "hybrid-sleep" "suspend" "hibernate" "restart" "shutdown" | dmenu -i -p 'System action:')" in "shutdown") sudo systemctl poweroff ; ;; "hybrid-sleep") sudo systemctl hybrid-sleep ; ;; "restart") sudo systemctl reboot ; ;; "suspend") sudo systemctl suspend ; ;; "hibernate") sudo systemctl hibernate ; ;; "lock") [ $WAYLAND != 1 ] && slock || swaylock; ;; esac # for this to work you may need to edit sudoer file.

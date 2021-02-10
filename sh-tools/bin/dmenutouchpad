@@ -24,7 +24,7 @@ if [ -n "$1" ]; then
 
 else
 	# Only spawn dmenu if not given command-line argument
-	onoff="$(printf "%s\n" 'Off' 'On' | dmenu -i -p "Trackpad ($cmd):");";
+	onoff="$(printf "%s\n" 'Off' 'On' | dmenu -i -p "Trackpad ($cmd):";)";
 fi;
 
 case "$onoff" in

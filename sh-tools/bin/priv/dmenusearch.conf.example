@@ -1,1 +1,1 @@
-#searx_addr='10.8.0.1:8888'
+#searx_addr='artnoi.com/searx/search?q=%s'

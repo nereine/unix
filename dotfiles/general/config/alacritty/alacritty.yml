@@ -9,7 +9,7 @@ window:
 font:
 # OS X only: use thin stroke font rendering on Retina displays; set to false on non-Retina computers
  use_thin_strokes: false
- size: 12
+ size: 16
  normal:
    family: Inconsolata
    style: Regular

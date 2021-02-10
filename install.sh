@@ -7,16 +7,35 @@ case "$1" in
 		rsyncopt='v';	;;
 	'-n'|'-d'|'--dry-run')
 		rsyncopt='vn';	;;
-esac
+esac;
+
+# Use rsync(1) if available, else use cp(1)
+[ -n "$(command -v rsync)" ]\
+&& copycmd=rsync\
+|| copycmd=cp;
 
 # Source simyn.sh, lb.sh
 myfiles=("sh-tools/bin/yn.sh" "sh-tools/bin/lb.sh")
-for f in "${myfiles[@]}"; do 
+for f in "${myfiles[@]}";
+do
 	. $f || printf "Failed to source %s\n" "$myfiles";
-done
+done;
 
 # Create neccessary directory
 mkdir -p "$HOME/bin" "$HOME/.config/shell";
+
+rsyncf() {
+	# usage: rsyncf $src $dest
+	case "$copycmd" in
+		'rsync')
+			rsync "-ra${rsyncopt}"  "$1" "$2"; ;;
+		'cp')
+			cp -ra "$1" "$2"; ;;
+	esac;
+	
+	[ -n $rsyncopt ]\
+	&& printf "Copied %s to %s using %s\n" "$1" "$2" "$copycmd";
+}
 
 # Copy sh-tools/bin using rsync(1)
 simyn "install.sh: Install sh-tools to $HOME/bin"\
@@ -24,15 +43,28 @@ simyn "install.sh: Install sh-tools to $HOME/bin"\
 
 # Home dotfiles (ones which that reside in $HOME)
 line;
-simyn "install.sh: Install general dotfiles to $HOME"\
-&& dots0=($(find "dotfiles/general" -maxdepth 1 -type f));
-# Copy using home dotfiles for loop
-for f in "${dots0[@]}"; do
-	rsync "-ra${rsyncopt}" "$f" "$HOME";
+dots0="$(find "dotfiles/general" -maxdepth 1)";
+printf "install.sh: Listing home dotfiles:\n%s\n" "$dots0";
+
+# Copy home dotfiles, and skipping config for $HOME/.config
+simyn "install.sh: Install home dotfiles to $HOME"\
+&& \
+for f in $dots0;
+do
+	[ "$f" = "dotfiles/general/config" ]\
+	&& printf "Skipping dotfiles/general/config\n"\
+	|| rsyncf "$f" "$HOME/";
 done;
 
-# Copy $HOME/.config dotfiles
+# $HOME/.config dotfile directories
 line;
-printf "install.sh: Listing remaining dotfiles:\n%s\n" "$(find dotfiles/general/config -type f)";
-simyn "install.sh: Install these files?"\
-&& rsync "-ra${rsyncopt}" "dotfiles/general/config/" "$HOME/.config/";
+dots1=$(find dotfiles/general/config -type d);
+printf "install.sh: Listing remainder dotfiles for ${HOME}/.config:\n%s\n" "$dots1";
+
+# Copy $HOME/.config dotfile directories
+simyn "install.sh: Install these directories?"\
+&& \
+for d in $dots1;
+do
+	rsyncf "$d" "$HOME/.config";
+done;
