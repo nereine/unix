@@ -44,6 +44,17 @@ uparg(){
 	esac;
 }
 
+# upprompt() prompts user for confirmation.
+# upprompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
+upprompt() {
+	# Show command description
+	printf "up: %s\n" "$1";
+	# Yes/no prompt - exit if no
+ 	simyn "Run command: $2"\
+	|| return 1;
+}
+
+
 upcmd() {
 # upcmd() will generate normal array of commands to be run ${cmd[]}
 # as well as its description ${cmddesc[]}
@@ -53,16 +64,6 @@ upcmd() {
 	# uparg() gets commands from up.tables based on argument (user input)
 	uparg "$1";
 	
-	# upprompt() prompts user for confirmation.
-	# upprompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
-	upprompt() {
-		# Show command description
-		printf "up: %s\n" "$d";
-		# Yes/no prompt - exit if no
- 		simyn "Run command: $c"\
-		|| exit;
-	}
-
 	# upbefore is usually used to split long command strings in to ${cmd[]} array values
 	# Currently, it is used to split bash commands with ';' and '&&'
 	# See more info at sh-tools/bin/up.tables
@@ -74,10 +75,8 @@ upcmd() {
 	for c in "${cmd[@]}"; do
 		for d in "${cmddesc[@]}"; do
 			## Prompt user before running commands sourced from up.tables
-			upprompt;
-			
-			## Command $cmd ($c) is run here
-			$SHELL -c "$c";
+			upprompt "$d" "$c"\
+			&& $SHELL -c "$c";
 			
 			## Report description as done. Description will be highlighted by lines made out of "="
 			line; printf '%s: done\n' "$d"; line;
