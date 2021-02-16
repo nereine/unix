@@ -5,7 +5,7 @@
 myname="$(whoami)";
 myhost="$HOSTNAME";
 # Override example
-myhost="t14"
+myhost="T14"
 
 ## Get dynamic information
 get_status() {
