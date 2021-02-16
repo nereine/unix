@@ -29,8 +29,8 @@ set $yellow1 "#f2ca30"
 
 # client.<class> <border> <background> <text> [<indicator> [<child_border>]]
 client.focused $blue $blue $black $yellow1
-#output * bg #000000 solid_color
-output "*" bg /z14/wall/joi2.jpg fill
+output * bg #000000 solid_color
+#output "*" bg /z14/wall/joi2.jpg fill
 
 # Assignments (window rules)
 #for_window [app_id="librewolf"] move container to workspace 3
