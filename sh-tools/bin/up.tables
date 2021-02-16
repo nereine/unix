@@ -38,9 +38,9 @@ upupdate() {
 uplist() {
 	typeset -A uplistTable;
 	uplistTable[desc]="List outdated packages";
-	uplistTable[Darwin]="brew outdated";
+	uplistTable[Darwin]="brew update;brew outdated";
 	uplistTable[OpenBSD]="doas pkg_add -Uun";
-	uplistTable[Debian]="sudo apt list --upgradeable";
+	uplistTable[Debian]="sudo apt update;sudo apt list --upgradeable";
 	uplistTable[Arch]="checkupdates;yay -Qu";
 	uplistTable[Void]="";
 	uplistTable[Redhat]="sudo dnf check-update";
@@ -74,7 +74,7 @@ upsys() {
 	upsysTable[Darwin]="softwareupdate -i -a";
 	upsysTable[OpenBSD]="doas fw_update;doas syspatch";
 	upsysTable[FreeBSD]="sudo freebsd-update fetch install";
-	upsysTable[Debian]="sudo apt full-upgrade";
+	upsysTable[Debian]="sudo apt update;sudo apt full-upgrade";
 	upsysTable[Arch]="yay -Syyuu";
 	upsysTable[Void]="";
 	upsysTable[Redhat]="sudo dnf upgrade --refresh";
@@ -101,10 +101,8 @@ upclean() {
 	cmd+="${cleanTable[$OS]}";
 }
 
-## Special commands not included in the generic tables
+## Special commands whose associative array keys are not defined in upcmd()
 upspecial() {
-	# Unlike other *Table(s) above, ${specTable[]} uses does not have its own $cmddesc
-	# Instead, $cmddesc is made by putting the actual command line into a pre-formatted string
 	typeset -A specTable
 	
 	## Synopsis
@@ -120,6 +118,8 @@ upspecial() {
 	specTable[y]+="yay -Syu";
 	
 	# Assign $cmd and its description
+	# Unlike other *Table(s) above, ${specTable[]} members do not have their own $cmddesc
+	# Instead, $cmddesc is copied from the actual command line string
 	cmddesc+="Special command: ${specTable[$1]}";
 	cmd+="${specTable[$1]}";
 }
