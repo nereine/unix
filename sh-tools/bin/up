@@ -49,11 +49,10 @@ uparg(){
 upprompt() {
 	# Show command description
 	printf "up: %s\n" "$1";
-	# Yes/no prompt - exit if no
+	# Simple Yes/No prompt - return 1 if no
  	simyn "Run command: $2"\
 	|| return 1;
 }
-
 
 upcmd() {
 # upcmd() will generate normal array of commands to be run ${cmd[]}

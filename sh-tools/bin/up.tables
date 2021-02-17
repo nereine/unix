@@ -92,7 +92,7 @@ upclean() {
 	cleanTable[OpenBSD]="doas pkg_delete -a";
 	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
 	cleanTable[Debian]="sudo apt autoremove;sudo apt autoclean";
-	cleanTable[Arch]="pacman_cleanorphans;yay -Sc"; # will use upbefore()
+	cleanTable[Arch]="pacman -Rns $(pacman -Qqdt | tr '\n' ' ');yay -Sc"; # will use upbefore()
 	cleanTable[Void]="sudo xbps-remove -Oo";
 	cleanTable[Redhat]="sudo dnf autoremove;sudo dnf clean all";
 	
@@ -136,14 +136,6 @@ upbefore(){
 				unset cmd;
 				# Copy $newcmd to $cmd
 				cmd=("${newcmd[@]}");
-				;;
-		esac
-	# If $cmd has the following string triggers
-		case "${cmd[0]}" in
-			'pacman_cleanorphans')
-				orphans="$(pacman -Qqdt | tr '\n' ' ')";
-				# Simply adding cmd[0]="sudo pacman -Rns $orphans|yay -Sc" in upclean() would fail due to shell expansion
-				cmd[0]="sudo pacman -Rns $orphans";
 				;;
 		esac
 	done
