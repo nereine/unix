@@ -14,8 +14,8 @@
 [[ "$fts_status" != 'ok' ]]\
 && . "$(command -v 'source.sh')";
 
-uparg(){
-# uparg() will source commands from up.tables and select which to run based on argument ($1)
+up_arg(){
+# up_arg() will source commands from up.tables and select which to run based on argument ($1)
 # Because we use 'command -v' to find up.tables, sourcing will fail if up.tables is not in $PATH
 	
 	uptables="$(command -v 'up.tables')"\
@@ -44,9 +44,9 @@ uparg(){
 	esac;
 }
 
-# upprompt() prompts user for confirmation.
-# upprompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
-upprompt() {
+# up_prompt() prompts user for confirmation.
+# up_prompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
+up_prompt() {
 	# Show command description
 	printf "up: %s\n" "$1";
 	# Simple Yes/No prompt - return 1 if no
@@ -54,27 +54,38 @@ upprompt() {
 	|| return 1;
 }
 
-upcmd() {
-# upcmd() will generate normal array of commands to be run ${cmd[]}
+## up_queue() - queue the commands from the table into indexed array 'cmd'. It extracts commands from retrieved up.tables string with 'delimeters'
+up_queue() {
+	delimeters=(';' '&&' '||');
+	# If $cmd contains one of these $deli character, expand $cmd into $newcmd, and then copy $newcmd to $cmd (overwrite)
+
+	for deli in "${delimeters[@]}";
+	do
+		case "${cmd[0]}" in
+			*';'*|*'&&'*)
+				IFS="$deli" read -ra newcmd <<< "${cmd[0]}";
+				unset cmd;
+				# Copy $newcmd to $cmd
+				cmd=("${newcmd[@]}"); ;;
+		esac;
+	done;
+}
+
+up_exec_loop() {
+# up_cmd() will generate normal array of commands to be run ${cmd[]}
 # as well as its description ${cmddesc[]}
 	typeset -a cmd;
 	typeset -a cmddesc;
 	
-	# uparg() gets commands from up.tables based on argument (user input)
-	uparg "$1";
+	# up_arg() gets commands from up.tables based on argument (user input), then up_queue() queues the commands for execution
+	up_arg "$1";
+	up_queue;
 	
-	# upbefore is usually used to split long command strings in to ${cmd[]} array values
-	# Currently, it is used to split bash commands with ';' and '&&'
-	# See more info at sh-tools/bin/up.tables
-	upbefore;
-	
-	# After successful command retrieval from the tables, run commands from ${cmd[]} tables
-	# up uses for loop because it was previously anticipated to run miltiple commands queued in ${cmd[]}
-	# but unfortunately, I am too lazy to write a way to append more commands into the table
+	# After successful command retrieval from the tables, run commands from indexed arrays 'cmd'
 	for c in "${cmd[@]}"; do
 		for d in "${cmddesc[@]}"; do
 			## Prompt user before running commands sourced from up.tables
-			upprompt "$d" "$c"\
+			up_prompt "$d" "$c"\
 			&& $SHELL -c "$c";
 			
 			## Report description as done. Description will be highlighted by lines made out of "="
@@ -82,8 +93,7 @@ upcmd() {
 		done;
 	done;
 	
-	# Run command after ${cmd[]}.
-	# See more info at unix/sh-tools/bin/up.tables
+	# upafter() is defined in unix/sh-tools/bin/up.tables
 	upafter;
 }
 
@@ -91,7 +101,9 @@ main() {
 	# Only run with argument
 	if [ -n "$1" ]; then
 	# Get command list
-		upcmd $1;
+		up_exec_loop "$1";
+	else
+		up_exec_loop 'help';
 	fi;
 }
 
