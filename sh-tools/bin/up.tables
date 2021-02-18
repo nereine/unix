@@ -2,21 +2,35 @@
 # up is a simple cross-platform shell script for package/system upgrade
 # up.tables is a files containing command tables for up
 
-##	Synopsis
-#	nameFunction() {
-#		typeset -A nameTable
-#		nameTable[OS_0]="action for OS_0";
-#		nameTable[OS_1]="action for OS_1";
-#
-#		## Note that OS variable ($OS) is from dotfiles/general/.bash_profile
-#		You can get .bash_profile from https://gitlab.com/artnoi-staple/unix
-#		
-#		cmddesc+="Description for action for selected OS"		
-#		# Prompt user for confirmation, else exit right away
-#		upprompt;
-#		# Assign command to cmd variable based on OS
-#		cmd+="${nameTable[$OS]}";
-#	}
+# up_arg() will source commands from up.tables and select which to run based on argument ($1)
+up_arg() {
+	# User input ($1) is filtered here in case statement below
+	case "$1" in
+		'd'|'date')
+			upupdate;
+			;;
+		'g'|'grade')
+			upupgrade;
+			;;
+		'l'|'list')
+			uplist;
+			;;
+		's'|'sys')
+			upsys;
+			;;
+		'c'|'clean')
+			upclean;
+			;;
+		'h'|'help')
+			# Print up.tables file using less(1)
+			less "${0}.tables";
+			exit;
+			;;
+		*)
+			# If $1 does NOT match any cases above, try special command table
+			upspecial "$1"; ;;
+	esac;
+}
 
 ## The command in this table is used to "update" the package database
 upupdate() {
