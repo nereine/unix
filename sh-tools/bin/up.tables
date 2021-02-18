@@ -7,20 +7,25 @@ up_arg() {
 	# User input ($1) is filtered here in case statement below
 	case "$1" in
 		'd'|'date')
-			upupdate; ;;
+			upupdate;
+			;;
 		'g'|'grade')
-			upupgrade; ;;
+			upupgrade;
+			;;
 		'l'|'list')
-			uplist; ;;
+			uplist;
+			;;
 		's'|'sys')
-			upsys; ;;
+			upsys;
+			;;
 		'c'|'clean')
-			upclean; ;;
+			upclean;
+			;;
 		'h'|'help')
 			# Print up.tables file using less(1)
-			less "$uptables";
-			printf "$ less %s\n" "$uptables";
-			exit; ;;
+			less "${0}.tables";
+			exit;
+			;;
 		*)
 			# If $1 does NOT match any cases above, try special command table
 			upspecial "$1"; ;;
