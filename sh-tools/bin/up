@@ -11,38 +11,10 @@
 && exit 1;
 
 ## Sourcing external files using source.sh
+# Because we use 'command -v', sourcing will fail if the files are not in $PATH
 [[ "$fts_status" != 'ok' ]]\
-&& . "$(command -v 'source.sh')";
-
-up_arg(){
-# up_arg() will source commands from up.tables and select which to run based on argument ($1)
-# Because we use 'command -v' to find up.tables, sourcing will fail if up.tables is not in $PATH
-	
-	uptables="$(command -v 'up.tables')"\
-	&& . "$uptables";
-	
-	# User input ($1) is filtered here in case statement below
-	case "$1" in
-		'd'|'date')
-			upupdate; ;;
-		'g'|'grade')
-			upupgrade; ;;
-		'l'|'list')
-			uplist; ;;
-		's'|'sys')
-			upsys; ;;
-		'c'|'clean')
-			upclean; ;;
-		'h'|'help')
-			# Print up.tables file using less(1)
-			less "$uptables";
-			printf "$ less %s\n" "$uptables";
-			exit; ;;
-		*)
-			# If $1 does NOT match any cases above, try special command table
-			upspecial "$1"; ;;
-	esac;
-}
+&& . "$(command -v 'source.sh')"\
+&& . "$(command -v 'up.tables')";
 
 # up_prompt() prompts user for confirmation.
 # up_prompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
