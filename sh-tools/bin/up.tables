@@ -55,7 +55,7 @@ uplist() {
 	uplistTable[Darwin]="brew update;brew outdated";
 	uplistTable[OpenBSD]="doas pkg_add -Uun";
 	uplistTable[Debian]="sudo apt update;sudo apt list --upgradeable";
-	uplistTable[Arch]="checkupdates;yay -Qu";
+	uplistTable[Arch]="checkupdates;paru -Qu;yay -Qu";
 	uplistTable[Void]="";
 	uplistTable[Redhat]="sudo dnf check-update";
 	
@@ -72,7 +72,7 @@ upupgrade() {
 	upgradeTable[OpenBSD]="doas pkg_add -Uu";
 	upgradeTable[FreeBSD]="sudo pkg update";
 	upgradeTable[Debian]="sudo apt upgrade";
-	upgradeTable[Arch]="yay -Syu";
+	upgradeTable[Arch]="sudo pacman -Syu;paru -Syu";
 	upgradeTable[Void]="sudo xbps-install -Suv";
 	upgradeTable[Redhat]="sudo dnf update";
 	
@@ -120,7 +120,7 @@ upspecial() {
 	typeset -A specTable;
 	
 	specTable[git]="up-git"; # See https://gitlab.com/artnoi-staple/unix/sh-tools/bin/up-git
-	specTable[aur]+="yay -Syu";
+	specTable[aur]+="paru -Syu";
 	specTable[y]+="yay -Syu";
 	
 	## Assign $cmd and its description
