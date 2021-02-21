@@ -30,9 +30,11 @@ alias ga='git add';
 alias gc='git commit';
 alias gp='git push';
 alias da='doas';
+alias sw='sway';
 alias sx='startx';
 alias hk='less .config/sxhkd/sxhkdrc';
 alias vim='vim -i /tmp/.viminfo';
+alias www='w3m'
 alias tsm='transmission-remote';
 alias pingg='ping -c 1 1.1.1.1';
 
