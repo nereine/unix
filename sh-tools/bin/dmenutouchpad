@@ -24,7 +24,7 @@ if [ -n "$1" ]; then
 
 else
 	# Only spawn dmenu if not given command-line argument
-	onoff="$(printf "%s\n" 'Off' 'On' | dmenu -i -p "Trackpad ($cmd):";)";
+	onoff="$(printf "%s\n" 'Off' 'On' | dmenu -i -p "Trackpad ($cmd):")";
 fi;
 
 case "$onoff" in
@@ -34,12 +34,14 @@ case "$onoff" in
 		sh -c "$offcmd"; ;;
 	'On')
 		sh -c "$oncmd"; ;;
+	*)
+		printf "Expected 'Off' or 'On'\n"; ;;
 esac;
 
 }
 
 xorg_input() {
-	cmd='xorg_input'
+	cmd='xorg_input';
 	# For xf86-input-synaptics
 	offcmd="synclient TouchpadOff=1";
 	oncmd="synclient TouchpadOff=0";
@@ -59,4 +61,4 @@ sway_input() {
 && xorg_input\
 || sway_input;
 # Get done
-main "$1"
+main "$1";
