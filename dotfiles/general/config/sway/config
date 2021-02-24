@@ -8,8 +8,8 @@ default_orientation auto
 font pango:hack 12
 gaps inner 6
 gaps outer 6
-default_border pixel 1
-default_floating_border pixel 1
+default_border pixel 2
+default_floating_border pixel 4
 titlebar_border_thickness 0
 
 # From 'iceberg' theme (bright)
@@ -132,7 +132,7 @@ bindsym --to-code {
 # switch to workspace
 bindsym $mod+1 workspace number 1
 bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3 :Browser
+bindsym $mod+3 workspace number 3
 bindsym $mod+4 workspace number 4
 bindsym $mod+5 workspace number 5
 bindsym $mod+6 workspace number 6
