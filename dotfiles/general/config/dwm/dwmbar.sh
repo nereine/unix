@@ -15,9 +15,9 @@
 myhost="T14"
 myname="nereine";
 
-## Get dynamic information - I tried my best to optimize this because it may be run very frequently
+## Get dynamic information - I tried my best to optimize this because it is run very frequently
 get_status() {
-# Battery information is retrieved by 'acpi -b' and later formatted with awk to show the charging state and charge percentage
+# Battery information is retrieved by 'acpi -b' and later formatted with awk to show the charging state and charge percentage. Both awk fields ($3 charging state and, $4 charge level) have last char removed using awk substr
 # Thermal information is retrieved by 'lm_sensors' and later formatted with awk. awk searches for desired string with regexp, in the default case it is /fan/, although you can always use other regxep to retrieve different lines from lm_sensors ('sensors')
 
 	time="$(date +'%A, %b %d > %H:%M'\
@@ -29,13 +29,14 @@ get_status() {
 
 	# $thermals has trailing space, so the printf format below is a bit funny. Note that ${str%???} will remove 3 last chars from $str
 	printf "%s | %s | %s | %s\n" "${myname}@${myhost}" "RPM ${thermals%?}" "$batt" "$time";
+
 }
 
 main() {
 	while true;
 	do
 		## $WAYLAND is exported from $HOME/{.kshrc, .bash_profile}
-		# $arg is used to idiotically enable forking on dwm, and therefore is needed for main()
+		# $arg is used to idiotically enable forking on X11 dwm, and therefore is needed for main()
 		[ -z $WAYLAND ]\
 		&& xsetroot -name "$(get_status)"\
 		&& arg='&'\
@@ -45,22 +46,12 @@ main() {
 	done;
 }
 
-# For testing, comment out main() and uncomment get_status()
+## For testing, comment out main() and uncomment get_status()
 main "$arg";
 #get_status;
 	
-### other ways to get data
-## Get static status information - These lines should work, yet it doesn't on my Sway setup except the one using 'whoami'
+## Get static status information - These lines should work, yet it doesn't on my Sway setup except the one using 'whoami', probably non-interactive shell issues from my .profile
 #myname="$(whoami)";
 #myname="$USER"
 #myhost=$(< /etc/hostname);
 #myhost="$HOSTNAME"
-
-## My shell can't do foo=$(< file), so I had to use cat(1) or kat (my own cat). For shells supporting foo=$(< file), we can read from file invoking cat needlessly. The different temperature file names are for examples only
-	#temp=`kat /sys/class/hwmon/hwmon4/temp1_input`;
-	#temp=$(< /sys/class/thermal/thermal_zone0/temp);
-	
-## Old, working script, though a bit bloated
-	#data="$(sensors|grep -A3 thinkpad)";
-	#fans="$(echo $data | awk '{print $6 " rpm"}')";
-	#temp="$(echo $data | awk '{print substr($9,2); }')";
