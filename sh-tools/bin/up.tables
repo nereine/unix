@@ -139,7 +139,7 @@ upafter() {
 		&& softwareupdate -i -a;
 	elif [ -n "$(command -v systemctl)" ]; then
 		simyn 'Reload-restart systemd services?'\
-		&&	systemctl daemon-reload\
-		&&	systemctl reset-failed;
+		&&	sudo systemctl daemon-reload\
+		&&	sudo systemctl reset-failed;
 	fi
 }
