@@ -6,14 +6,14 @@
 up_arg() {
 	# User input ($1) is filtered here in case statement below
 	case "$1" in
+		'l'|'list')
+			uplist;
+			;;
 		'd'|'date')
 			upupdate;
 			;;
 		'g'|'grade')
 			upupgrade;
-			;;
-		'l'|'list')
-			uplist;
 			;;
 		's'|'sys')
 			upsys;
@@ -32,6 +32,26 @@ up_arg() {
 	esac;
 }
 
+## The commands in this table are used to "list" outdated packages
+uplist() {
+	typeset -A uplistTable;
+	uplistTable[desc]="List outdated packages";
+	uplistTable[Darwin]="brew outdated";
+	uplistTable[OpenBSD]="doas pkg_add -Uun";
+	# This is also how you add more commands in one line
+	uplistTable[Debian]="sudo apt update ; sudo apt list --upgradeable";
+	# Or multiple lines
+	uplistTable[Arch]="checkupdates ; ";
+	uplistTable[Arch]+="paru -Qu ; ";
+	uplistTable[Arch]+="yay -Qu";
+	uplistTable[Void]="sudo xbps-install -Suv";
+	uplistTable[Redhat]="sudo dnf check-update";
+	
+	# Assign $cmd and its description
+	cmddesc+="${uplistTable[desc]}";
+	cmd+="${uplistTable[$OS]}";
+}
+
 ## The command in this table is used to "update" the package database
 upupdate() {
 	typeset -A updateTable;
@@ -39,29 +59,13 @@ upupdate() {
 	updateTable[Darwin]="brew update";
 	updateTable[OpenBSD]="doas pkg_add -Uun";
 	updateTable[Debian]="sudo apt update";
-	updateTable[Arch]="checkupdates";
+	updateTable[Arch]="checkupdates ; paru -Qu";
 	updateTable[Void]="sudo xbps-install -Suv";
 	updateTable[Redhat]="sudo dnf check-update";
 	
 	# Assign $cmd and its description
 	cmddesc+="${updateTable[desc]}";
 	cmd+="${updateTable[$OS]}";
-}
-
-## The commands in this table are used to "list" outdated packages
-uplist() {
-	typeset -A uplistTable;
-	uplistTable[desc]="List outdated packages";
-	uplistTable[Darwin]="brew update;brew outdated";
-	uplistTable[OpenBSD]="doas pkg_add -Uun";
-	uplistTable[Debian]="sudo apt update;sudo apt list --upgradeable";
-	uplistTable[Arch]="checkupdates;paru -Qu;yay -Qu";
-	uplistTable[Void]="";
-	uplistTable[Redhat]="sudo dnf check-update";
-	
-	# Assign $cmd and its description
-	cmddesc+="${uplistTable[desc]}";
-	cmd+="${uplistTable[$OS]}";
 }
 
 ## The commands in this table are used to upgrade the outdated packages
@@ -72,7 +76,7 @@ upupgrade() {
 	upgradeTable[OpenBSD]="doas pkg_add -Uu";
 	upgradeTable[FreeBSD]="sudo pkg update";
 	upgradeTable[Debian]="sudo apt upgrade";
-	upgradeTable[Arch]="sudo pacman -Syu;paru -Syu";
+	upgradeTable[Arch]="sudo pacman -Syu ; paru -Syu";
 	upgradeTable[Void]="sudo xbps-install -Suv";
 	upgradeTable[Redhat]="sudo dnf update";
 	
@@ -106,7 +110,8 @@ upclean() {
 	cleanTable[OpenBSD]="doas pkg_delete -a";
 	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
 	cleanTable[Debian]="sudo apt autoremove;sudo apt autoclean";
-	cleanTable[Arch]="pacman -Rns $(pacman -Qqdt | tr '\n' ' ');yay -Sc";
+	cleanTable[Arch]="sudo pacman -Rns $(pacman -Qqdt | tr '\n' ' ');"
+	cleanTable[Arch]+="yay -Sc";
 	cleanTable[Void]="sudo xbps-remove -Oo";
 	cleanTable[Redhat]="sudo dnf autoremove;sudo dnf clean all";
 	

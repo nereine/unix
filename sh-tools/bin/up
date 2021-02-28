@@ -16,27 +16,21 @@
 && . "$(command -v 'source.sh')"\
 && . "$(command -v 'up.tables')";
 
-# up_prompt() prompts user for confirmation.
-# up_prompt() uses variables $c ($cmd) and $d ($cmddesc) used in the 'for' loop below
-up_prompt() {
-	# Show command description
-	printf "up: %s\n" "$1";
-	# Simple Yes/No prompt - return 1 if no
- 	simyn "Run command: $2"\
-	|| return 1;
-}
-
-## up_queue() - queue the commands from the table into indexed array 'cmd'. It extracts commands from retrieved up.tables string with 'delimeters'
+## up_queue() - queue the commands from the table into indexed array 'cmd'. It extracts commands from retrieved up.tables strings containing $delimeters. For now, only ';' is supported.
 up_queue() {
-	delimeters=(';' '&&' '||');
+	delimeters=(';');
 	# If $cmd contains one of these $deli character, expand $cmd into $newcmd, and then copy $newcmd to $cmd (overwrite)
 
 	for deli in "${delimeters[@]}";
 	do
+		# At this point, array $cmd only has one element cmd[0]
 		case "${cmd[0]}" in
-			*';'*|*'&&'*)
+			# If cmd[0] matches any of $delimeters pattern
+			# or just *';'* for now
+			*"$deli"*)
+				# Use IFS=';' to separate commands
+				# And read them into array $newcmd
 				IFS="$deli" read -ra newcmd <<< "${cmd[0]}";
-				unset cmd;
 				# Copy $newcmd to $cmd
 				cmd=("${newcmd[@]}"); ;;
 		esac;
@@ -44,25 +38,33 @@ up_queue() {
 }
 
 up_exec_loop() {
-# up_cmd() will generate normal array of commands to be run ${cmd[]}
-# as well as its description ${cmddesc[]}
+
+	# Generate normal array of commands to be run ${cmd[]}
+	# as well as its description ${cmddesc[]}
 	typeset -a cmd;
 	typeset -a cmddesc;
 	
-	# up_arg() gets commands from up.tables based on argument (user input), then up_queue() queues the commands for execution
+	# up_arg() gets commands from up.tables
+	# It looks at the tables matching command-line argument
 	up_arg "$1";
-	up_queue;
 	
-	# After successful command retrieval from the tables, run commands from indexed arrays 'cmd'
-	for c in "${cmd[@]}"; do
-		for d in "${cmddesc[@]}"; do
-			## Prompt user before running commands sourced from up.tables
-			up_prompt "$d" "$c"\
-			&& $SHELL -c "$c";
-			
-			## Report description as done. Description will be highlighted by lines made out of "="
-			line; printf '%s: done\n' "$d"; line;
-		done;
+	# Prompt user to queue if containing delimeter ';'
+	[[ "$cmd" == *";"* ]]\
+	&& simyn "Commands for ${cmddesc}:\n${cmd}\n\nEnter Yes to queue cmd, or No to run all cmd at once?"\
+	&& up_queue;
+	
+	# Run commands from indexed arrays 'cmd'
+	# If up_queue was used, then this array has >1 number of element
+	for commands in "${cmd[@]}";
+	do
+		## Prompt user before using sh -c to run $c
+		simyn "Run ${commands}?"\
+		&& sh -c "$commands"\
+		&& line\
+		&& printf 'Done: %s (%s)\n' "$cmddesc" "$commands"\
+		&& line\
+		|| printf "\n";
+
 	done;
 	
 	# upafter() is defined in unix/sh-tools/bin/up.tables
