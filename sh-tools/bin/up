@@ -58,12 +58,13 @@ up_exec_loop() {
 	for commands in "${cmd[@]}";
 	do
 		## Prompt user before using sh -c to run $c
+		printf "up - %s\n" "$cmddesc"
 		simyn "Run ${commands}?"\
 		&& sh -c "$commands"\
-		&& line\
-		&& printf 'Done: %s (%s)\n' "$cmddesc" "$commands"\
-		&& line\
-		|| printf "\n";
+		&& line;
+		
+		printf 'Exit status = %i for %s\n' "$?" "$commands";
+		line;
 
 	done;
 	

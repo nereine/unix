@@ -35,7 +35,7 @@ up_arg() {
 ## The commands in this table are used to "list" outdated packages
 uplist() {
 	typeset -A uplistTable;
-	uplistTable[desc]="List outdated packages";
+	uplistTable[desc]="listing outdated packages";
 	uplistTable[Darwin]="brew outdated";
 	uplistTable[OpenBSD]="doas pkg_add -Uun";
 	# This is also how you add more commands in one line
@@ -55,7 +55,7 @@ uplist() {
 ## The command in this table is used to "update" the package database
 upupdate() {
 	typeset -A updateTable;
-	updateTable[desc]="Check for new packages (or in some systems, update package database)";
+	updateTable[desc]="checking for new packages (or in some systems, updating package database)";
 	updateTable[Darwin]="brew update";
 	updateTable[OpenBSD]="doas pkg_add -Uun";
 	updateTable[Debian]="sudo apt update";
@@ -71,7 +71,7 @@ upupdate() {
 ## The commands in this table are used to upgrade the outdated packages
 upupgrade() {
 	typeset -A upgradeTable;
-	upgradeTable[desc]="Upgrade packages";
+	upgradeTable[desc]="upgrading packages";
 	upgradeTable[Darwin]="brew upgrade";
 	upgradeTable[OpenBSD]="doas pkg_add -Uu";
 	upgradeTable[FreeBSD]="sudo pkg update";
@@ -88,7 +88,7 @@ upupgrade() {
 ## The commands in this table are used to upgrade system software
 upsys() {
 	typeset -A upsysTable;
-	upsysTable[desc]="Upgrade system software";
+	upsysTable[desc]="upgrading system software";
 	upsysTable[Darwin]="softwareupdate -i -a";
 	upsysTable[OpenBSD]="doas fw_update;doas syspatch";
 	upsysTable[FreeBSD]="sudo freebsd-update fetch install";
@@ -105,7 +105,7 @@ upsys() {
 ## The commands in this table are used to clean old files from unwanted/outdated packages
 upclean() {
 	typeset -A cleanTable;
-	cleanTable[desc]="Clean unwanted and outdated package cache and files";
+	cleanTable[desc]="cleaning unwanted and outdated package cache and files";
 	cleanTable[Darwin]="brew cleanup";
 	cleanTable[OpenBSD]="doas pkg_delete -a";
 	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
