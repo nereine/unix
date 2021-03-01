@@ -1,6 +1,6 @@
 ### Autostart
-# swayidle to swaylock after n seconds of inactivity
-exec swayidle -w timeout 300 'swaylock' timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock'
+# Idle and screenlock (when first 'timeout 300', shows blackscreen - but when resume from sleep, use default swaylock config)
+exec swayidle -w timeout 60 'swaylock -f -c 000000' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock'
 
 ### Output
 default_orientation auto
@@ -30,6 +30,7 @@ set $yellow1 "#f2ca30"
 # client.<class> <border> <background> <text> [<indicator> [<child_border>]]
 client.focused $blue $blue $black $yellow1
 output * bg #000000 solid_color
+#output * bg /home/artnoi/wall/scene2.jpg fill
 
 # Assignments (window rules)
 #for_window [app_id="librewolf"] move container to workspace 3
@@ -76,8 +77,10 @@ set $term alacritty
 set $menu dmenu
 
 ## media keybindings (--locked allows keybindings in lockscreen)
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+#bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+#bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym --locked XF86AudioRaiseVolume exec ~/bin/sndctl up
+bindsym --locked XF86AudioLowerVolume exec ~/bin/sndctl dn
 bindsym --locked XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
