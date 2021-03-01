@@ -1,0 +1,26 @@
+#!/bin/sh
+
+# Get sink volume
+curr_vol=$(pactl list sinks | awk '/^\tVolume/ {print $5}')
+# Remove char "%"
+prev_vol="${curr_vol%"%"}"
+
+volup() { # Target volume +5%, maxed out at 100%
+	target_vol=$((prev_vol + 5));
+	[ $target_vol -ge 100 ] && target_vol=100;
+}
+
+voldn() { # Target volume -5%, min value at 0%
+	target_vol=$((prev_vol - 5));
+	[ $target_vol -le 0 ] && target_vol=0;
+}
+
+case "$1" in
+	up)
+		volup;;
+	
+	dn)
+		voldn;;
+esac;
+
+pactl set-sink-volume @DEFAULT_SINK@ "$target_vol%";
