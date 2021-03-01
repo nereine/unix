@@ -1,5 +1,5 @@
 ### Autostart
-# Idle and screenlock (when first 'timeout 300', shows blackscreen - but when resume from sleep, use default swaylock config)
+# swayidle to swaylock after n seconds of inactivity
 exec swayidle -w timeout 300 'swaylock' timeout 600 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock'
 
 ### Output
