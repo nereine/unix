@@ -19,6 +19,7 @@ myname="nereine";
 get_status() {
 # Battery information is retrieved by 'acpi -b' and later formatted with awk to show the charging state and charge percentage. Both awk fields ($3 charging state and, $4 charge level) have last char removed using awk substr
 # Thermal information is retrieved by 'lm_sensors' and later formatted with awk. awk searches for desired string with regexp, in the default case it is /fan/, although you can always use other regxep to retrieve different lines from lm_sensors ('sensors')
+# Sound information unfortunately requires PulseAudio pactl
 
 	time="$(date +'%A, %b %d > %H:%M'\
 	| awk '{print tolower($0)}';)";
@@ -26,9 +27,12 @@ get_status() {
 	| awk '{print tolower(substr($3, 1, length($3)-1)) ": " substr($4, 1, length($4)-1)}';);
 	thermals=$(sensors\
 	| awk '/fan/{c=2}c&&c-- {printf "%s ",$2} END {print ""}');
+	sndinfo=$(pactl list sinks\
+	| awk '/^\tMute/ {print "muted: " $2 ","}; /^\tVolume/ {print "vol: " $5}'\
+	| tr '\n' ' ');
 
 	# $thermals has trailing space, so the printf format below is a bit funny. Note that ${str%???} will remove 3 last chars from $str
-	printf "%s | %s | %s | %s\n" "${myname}@${myhost}" "RPM ${thermals%?}" "$batt" "$time";
+	printf "%s | %s | %s | %s | %s\n" "${myname}@${myhost}" "rpm: ${thermals%?}" "$batt" "${sndinfo%?}" "$time";
 
 }
 
@@ -42,7 +46,7 @@ main() {
 		&& arg='&'\
 		|| get_status;
 		# Status update interval
-		sleep 2;
+		sleep 1;
 	done;
 }
 
