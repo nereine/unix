@@ -14,6 +14,7 @@
 # Override example
 myhost="T14"
 myname="nereine";
+brightness_max="$(brightnessctl max)";
 
 ## Get dynamic information - I tried my best to optimize this because it is run very frequently
 get_status() {
@@ -31,8 +32,7 @@ get_status() {
 	| awk '/^\tMute/ {print "muted: " $2 ","}; /^\tVolume/ {print "vol: " $5}'\
 	| tr '\n' ' ');
 
-	# $thermals has trailing space, so the printf format below is a bit funny. Note that ${str%???} will remove 3 last chars from $str
-	printf "%s | %s | %s | %s | %s\n" "${myname}@${myhost}" "rpm: ${thermals%?}" "$batt" "${sndinfo%?}" "$time";
+	printf "%s | %s | %s | %s | %s | %s\n" "${myname}@${myhost}" "rpm: ${thermals% }" "$batt" "bright: $(brightnessctl get)/${brightness_max}" "${sndinfo% }" "$time";
 
 }
 
