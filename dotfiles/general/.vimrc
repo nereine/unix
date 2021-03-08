@@ -5,6 +5,7 @@ set directory=$HOME/.vim
 set undodir=$HOME/.vim
 " Editor settings
 syntax on
+set invnumber
 set relativenumber
 set autoindent
 set tabstop=4
