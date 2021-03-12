@@ -1,6 +1,6 @@
 ### Autostart
 # Idle and screenlock (when first 'timeout 300', shows blackscreen - but when resume from sleep, use default swaylock config)
-exec swayidle -w timeout 120 'swaylock -f -c 000000' timeout 300 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock'
+exec swayidle -w timeout 300 'swaylock -f -c 000000' timeout 360 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock'
 
 ### Output
 default_orientation auto
@@ -8,16 +8,16 @@ default_orientation auto
 font pango:hack 12
 gaps inner 6
 gaps outer 6
-default_border pixel 2
-default_floating_border pixel 4
+default_border normal 2
 titlebar_border_thickness 0
 
 # From 'iceberg' theme (bright)
 set $blue "#91acd1"
 set $cyan "#95c4ce"
+set $green "#c0ca8e"
 set $white "#efefef"
 set $black "#111111"
-set $green "#c0ca8e"
+set $sblack "#000000"
 set $magenta "#ada0d3"
 # Some colors have shades (red1/yellow1 is OpenBSD colors)
 set $red0 "#e98989"
@@ -28,7 +28,7 @@ set $yellow0 "#e9b189"
 set $yellow1 "#f2ca30"
 
 # client.<class> <border> <background> <text> [<indicator> [<child_border>]]
-client.focused $blue $blue $black $yellow1
+client.focused $magenta $magenta $sblack $white
 #output * bg #000000 solid_color
 output "*" bg /home/nereine/wallpep/wall2.jpg fill
 
@@ -44,7 +44,7 @@ bar {
 
 	colors {
 		statusline $blue
-		background $black
+		background $sblack
 		focused_workspace $dark0 $blue $dark0
 		inactive_workspace $dark0 $dark0 $blue
 	}
