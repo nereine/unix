@@ -10,7 +10,7 @@ set relativenumber
 set autoindent
 set tabstop=4
 set cursorline
-color afterglow
+color iceberg
 " Enable mouse in all modes if possible
 if has('mouse')
 	set mouse=a
