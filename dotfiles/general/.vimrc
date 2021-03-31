@@ -1,14 +1,16 @@
 " vim files
 set viminfo=
-set backupdir=$HOME/.vim
-set directory=$HOME/.vim
-set undodir=$HOME/.vim
+set noswapfile
+set nobackup
+set undodir=$HOME/.vim/
 " Editor settings
 syntax on
+set incsearch
 set invnumber
 set relativenumber
-set autoindent
-set tabstop=4
+set smartindent
+set tabstop=4 softtabstop=4
+set shiftwidth=4
 set cursorline
 color iceberg
 " Enable mouse in all modes if possible
