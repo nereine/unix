@@ -8,7 +8,7 @@ aliases="$HOME/.config/shell/aliases";
 . "$HOME/bin/priv/dmenusearch.conf"
 
 search_term="$(dmenu -i -p "Search internet" | tr ' ' '+')";
-SE="$(printf "%s\n" "Searx" "Google" | dmenu -i -p "Search engine")";
+SE="$(printf "%s\n" "Searx" "Google" "Youtube" | dmenu -i -p "Search engine")";
 
 case "$SE" in
 	'Searx')
@@ -23,6 +23,9 @@ case "$SE" in
 	'Google')
 		# Standard Google Search URL
 		prefix='https://google.com/search?q='; ;;
+
+	'Youtube')
+		prefix='https://youtube.com/results?search_query='; ;;	
 esac;
 
 # search term format: http://www.google.com/search?q=query+goes+here - from https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters. Words are separated by + signs. '+' can also be written as %20
