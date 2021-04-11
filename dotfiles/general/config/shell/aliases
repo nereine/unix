@@ -21,6 +21,12 @@ alias ...='cd ../..';
 alias ....='cd ../../..';
 alias .....='cd ../../../..';
 
+# Programming
+alias gr='go run';
+alias gb='go build';
+alias py='python';
+alias cr='cargo run';
+
 # Shortcuts
 alias c='clear';
 alias v='vim';
