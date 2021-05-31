@@ -111,6 +111,7 @@ upclean() {
 	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
 	cleanTable[Debian]="sudo apt autoremove;sudo apt autoclean";
 	cleanTable[Arch]="sudo pacman -Rns $(pacman -Qqdt | tr '\n' ' ');"
+	cleanTable[Arch]+="sudo paccache -r; ";
 	cleanTable[Arch]+="paru -Sc; yay -Sc";
 	cleanTable[Void]="sudo xbps-remove -Oo";
 	cleanTable[Redhat]="sudo dnf autoremove;sudo dnf clean all";
