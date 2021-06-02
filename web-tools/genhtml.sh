@@ -14,7 +14,7 @@ genhtml() {
 	for web in "${!webdirs[@]}" ;
 	do
 		simyn "${0}: Generate html for ${web}"\
-		&& ssg5 "${web[@]}" "${webdirs[$web]}"\
+		&& ssg6 "${web[@]}" "${webdirs[$web]}"\
 		'Artnoi.com' 'https://artnoi.com';
 	done;
 }
