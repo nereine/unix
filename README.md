@@ -75,7 +75,7 @@ Its content as of June 2021 is:
     	[ -n "$(command -v xbps)" ]\
 		  && export OS="Void";
 
-		[ -n "$(command -v dns)" ]\
+		[ -n "$(command -v dnf)" ]\
 		  && export OS="Redhat"; ;;
       esac;
     fi;

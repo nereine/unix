@@ -15,7 +15,7 @@ if [ -z "$OS" ]; then
 			[ -n "$(command -v apt-get )" ] && export OS="Debian";
 			[ -n "$(command -v pacman )" ] && export OS="Arch";
 			[ -n "$(command -v xbps)" ] && export OS="Void";
-			[ -n "$(command -v dns)" ] && export OS="Redhat"; ;;
+			[ -n "$(command -v dnf)" ] && export OS="Redhat"; ;;
 	esac;
 fi;
 
