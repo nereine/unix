@@ -1,7 +1,7 @@
-# My computing enviroment - `unix-tools`
+# My computing enviroment - [`unix-tools`](https://gitlab.com/artnoi-staple/unix)
 `unix-tools` is a collection of mostly shell scripts and configuration for my personal use.
 
-Lately, some of my friends also find it useful, so I decided to host it publicly on GitLab. Some of the scripts or configuration may not be very useful, or not of any practical use that I myself forget about them.
+Lately, some of my friends also find it useful, so I decided to host it publicly on [GitLab](https://gitlab.com/artnoi-staple/unix). Some of the scripts or configuration may not be very useful, or not of any practical use that I myself forget about them.
 
 ## Groups
 `unix-tools` can be categorized into the following groups:
@@ -107,6 +107,7 @@ This group provides uniformed behaviors like yes/no prompt for other files.
 A simple, stupid yes/no prompt that works in any of the supported shells. It can also be used to read string from user input.
 
 - `lb.sh`
+
 A useless script used to create line breaks.
 
 - `source.sh`
