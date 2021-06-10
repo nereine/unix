@@ -94,9 +94,11 @@ Its content as of June 2021 is:
 	esac;
 
 - `.bash_profile`, `.kshrc`, `.mkshrc`
+
 These files are sourced by `.profile`, and they later source the files in `unix/dotfiles/general/config/shell`
 
 - Files in `unix/dotfiles/general/config/shell`
+
 These files configures the `$PATH`, aliases, and prompts (`$PS1` and `$PS2`). Different shells will need different prompt files.
 
 ### Files-to-source (FTS)
