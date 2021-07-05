@@ -106,7 +106,7 @@ upsys() {
 upclean() {
 	typeset -A cleanTable;
 	cleanTable[desc]="cleaning unwanted and outdated package cache and files";
-	cleanTable[Darwin]="brew cleanup";
+	cleanTable[Darwin]="brew cleanup --prune=all";
 	cleanTable[OpenBSD]="doas pkg_delete -a";
 	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
 	cleanTable[Debian]="sudo apt autoremove;sudo apt autoclean";
