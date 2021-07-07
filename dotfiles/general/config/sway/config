@@ -34,10 +34,6 @@ client.focused $magenta $cyan $sblack $white
 #output * bg #000000 solid_color
 output * bg /home/artnoi/wall/scene2.jpg fill
 
-# Assignments (window rules)
-#for_window [app_id=""] move container to workspace 3
-for_window [app_id="pavucontrol"] floating toggle, resize set 600 px 800 px, move absolute position 0 px 0 px
-
 # DIY menubar
 bar {
 	position top
@@ -81,7 +77,7 @@ set $menu  dmenu
 ## media keybindings (--locked allows keybindings in lockscreen)
 #bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 #bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym $mod+v exec /usr/bin/pavucontrol
+bindsym $mod+v                         exec /usr/bin/pavucontrol
 bindsym --locked XF86AudioRaiseVolume  exec ~/bin/sndctl up
 bindsym --locked XF86AudioLowerVolume  exec ~/bin/sndctl dn
 bindsym --locked XF86AudioMute         exec pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -110,17 +106,17 @@ bindsym $mod+Shift+s     floating toggle
 bindsym $mod+Shift+f     fullscreen toggle
 
 ## directional focus and move
-bindsym $mod+Tab focus mode_toggle
-bindsym $mod+bracketleft focus prev
+bindsym $mod+Tab          focus prev
+bindsym $mod+bracketleft  focus prev
 bindsym $mod+bracketright focus next
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym $mod+Left         focus left
+bindsym $mod+Right        focus right
+bindsym $mod+Up           focus up
+bindsym $mod+Down         focus down
+bindsym $mod+Shift+Left   move left
+bindsym $mod+Shift+Down   move down
+bindsym $mod+Shift+Up     move up
+bindsym $mod+Shift+Right  move right
 
 # vim-key directional focus and move
 # --to-code is used to prevent failure on secondary input layout (ie for vim keys navigation)
@@ -193,5 +189,9 @@ bindsym $mod+g exec $HOME/bin/dmenusearch
 bindsym $mod+z exec $HOME/bin/dmenussh
 bindsym $mod+t exec $HOME/bin/dmenutouchpad
 bindsym $mod+d exec wofi --show run
+
+# Assignments (window rules)
+#for_window [app_id=""] move container to workspace 3
+for_window [app_id="pavucontrol"] floating toggle, resize set 600 px 800 px, move absolute position 0 px 0 px
 
 #include @sysconfdir@/sway/config.d/*
