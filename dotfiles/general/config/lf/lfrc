@@ -29,8 +29,8 @@ map X !$f
 map o &mimeopen $f
 map O $mimeopen --ask $f
 # my shortcuts
-map <bs> set hidden
-map <bs2> set hidden!
+map . set hidden
+map . set hidden!
 map ? $lf -doc | less
 map p paste
 map yy copy
