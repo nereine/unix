@@ -12,13 +12,13 @@ font:
  size: 16
  normal:
    family: Hack
-   style: Regular
+   style:  Regular
  bold:
    family: Hack
-   style: Bold
+   style:  Bold
  italic:
    family: Hack
-   style: Italic
+   style:  Italic
 scrolling:
  history: 5000
  multiplier: 4
