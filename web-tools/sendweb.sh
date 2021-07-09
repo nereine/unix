@@ -5,6 +5,7 @@
 [[ "$fts_status" != 'ok' ]]\
 && . 'webtools.conf';
 
+
 sendweb() {
 	
 	# Search one-level for directories with names matching $sendweb_find
@@ -16,7 +17,13 @@ sendweb() {
 		for dest in ${!sendweb_dest[@]};
 		do
 			simyn "sendweb.sh: Send ${dir} to ${dest}?"\
-			&& line\
+			|| break
+
+			simyn "Do you want to tar ${dir} before sending?"\
+			&& tar -cf "/tmp/${dir}.tar" "${dir}"\
+			&& dir="/tmp/${dir}.tar";
+			
+			line\
 			&& printf "sendweb.sh: Sending %s to %s\n" "$dir" "$dest"\
 			&& scp -r "$dir" "${sendweb_dest[$dest]}";
 		done;
