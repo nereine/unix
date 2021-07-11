@@ -16,7 +16,11 @@ sendweb() {
 		# dest is associative array key (index)
 		for dest in ${!sendweb_dest[@]};
 		do
-			simyn "sendweb.sh: Send ${dir} to ${dest}?"\
+			simyn "sendweb.sh: Send ${dir} to ${dest}? (tar will be used)"\
+			|| break
+
+			tar -cf "/tmp/${dir}.tar" "${dir}"\
+			&& dir="/tmp/${dir}.tar"\
 			&& line\
 			&& printf "sendweb.sh: Sending %s to %s\n" "$dir" "$dest"\
 			&& scp -r "$dir" "${sendweb_dest[$dest]}";
