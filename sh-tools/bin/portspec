@@ -3,5 +3,12 @@
 if [ -z $1 ]; then
 	sudo netstat -tulnp;
 else
-	sudo netstat -tulnp | grep $1;
+	prog=$(sudo netstat -tulnp | grep $1);
+	proc=$(echo $prog | awk '{print $NF}');
+	printf "$proc\n";
+
+	. $(command -v yn.sh);
+	simyn "Kill process?"\
+	&& targ=${proc%/*}\
+	&& kill $targ;
 fi

@@ -22,7 +22,8 @@ fi;
 # Wayland support
 [ "$XDG_SESSION_TYPE" = 'wayland' ]\
 && export WAYLAND=1\
-&& export MOZ_ENABLE_WAYLAND=1;
+&& export MOZ_ENABLE_WAYLAND=1\
+&& export MOZ_DISABLE_RDD_SANDBOX=1;
 
 case "$SHELL" in
 	# For ksh family, e.g. ksh, mksh, loksh
