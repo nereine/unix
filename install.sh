@@ -56,6 +56,13 @@ do
 	|| rsyncf "$f" "$HOME/";
 done;
 
+# Fix .vim symlinks
+ICEBERG_VIM="$HOME/.vim/colors/iceberg.vim"
+[ -d $HOME/git/iceberg.vim ] && [ -L $ICEBERG_VIM ] && [ ! -f $ICEBERG_VIM ]\
+&& rm "$HOME/.vim/colors/iceberg.vim"\
+&& ln -s "$HOME/git/iceberg.vim/colors/iceberg.vim" "$ICEBERG_VIM"\
+&& printf "Fixed vim color symlink\n";
+
 # $HOME/.config dotfile directories
 line;
 dots1=$(find dotfiles/general/config -type d);
