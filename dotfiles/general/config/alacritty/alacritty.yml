@@ -11,13 +11,13 @@ font:
  use_thin_strokes: false
  size: 16
  normal:
-   family: Hack
+   family: Inconsolata
    style:  Regular
  bold:
-   family: Hack
+   family: Inconsolata
    style:  Bold
  italic:
-   family: Hack
+   family: Inconsolata
    style:  Italic
 scrolling:
  history: 5000
