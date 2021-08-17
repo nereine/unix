@@ -11,21 +11,21 @@ font:
  use_thin_strokes: false
  size: 16
  normal:
-   family: Inconsolata
-   style: Regular
+   family: Hack
+   style:  Regular
  bold:
-   family: Inconsolata
-   style: Bold
+   family: Hack
+   style:  Bold
  italic:
-   family: Inconsolata
-   style: Italic
+   family: Hack
+   style:  Italic
 scrolling:
  history: 5000
  multiplier: 4
 key_bindings:
 # - { key: N,        mods: Command, command: { program: 'open', args: ['-n', '/Applications/Alacritty.app'] } }
- - { key: T,        mods: Control, action: ScrollToTop                  }
- - { key: B,        mods: Control, action: ScrollToBottom               }
+ - { key: PageUp,   mods: Command, action: ScrollToTop                  }
+ - { key: PageDown, mods: Command, action: ScrollToBottom               }
  - { key: PageUp,   mods: Control, action: ScrollPageUp                 }
  - { key: U,        mods: Control, action: ScrollPageUp                 }
  - { key: PageDown, mods: Control, action: ScrollPageDown               }

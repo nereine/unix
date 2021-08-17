@@ -7,10 +7,10 @@ aliases="$HOME/.config/shell/aliases";
 # Get Searx address $searx_addr
 . "$HOME/bin/priv/dmenusearch.conf"
 
-SearchEngine='Searx';
-#SearchEngine='Google';
+search_term="$(dmenu -i -p "Search internet" | tr ' ' '+')";
+SE="$(printf "%s\n" "Searx" "Google" "Youtube" | dmenu -i -p "Search engine")";
 
-case "$SearchEngine" in
+case "$SE" in
 	'Searx')
 		# Searx address must be provided in full (e.g. 'http://10.0.0.1:8888) at $HOME/bin/dmenusearch.sh - if not given, the line below will default to my searx instance
 		[ -z "$searx_addr" ]\
@@ -23,10 +23,12 @@ case "$SearchEngine" in
 	'Google')
 		# Standard Google Search URL
 		prefix='https://google.com/search?q='; ;;
+
+	'Youtube')
+		prefix='https://youtube.com/results?search_query='; ;;	
 esac;
 
 # search term format: http://www.google.com/search?q=query+goes+here - from https://moz.com/blog/the-ultimate-guide-to-the-google-search-parameters. Words are separated by + signs. '+' can also be written as %20
-search_term="$(dmenu -i -p "$SearchEngine" | tr ' ' '+')";
 
 # Only open web browser if input is non-zero - you can configure firefox.sh to use librewolf or other browser
 [ -n "$search_term" ]\

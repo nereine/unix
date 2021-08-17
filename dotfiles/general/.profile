@@ -15,14 +15,15 @@ if [ -z "$OS" ]; then
 			[ -n "$(command -v apt-get )" ] && export OS="Debian";
 			[ -n "$(command -v pacman )" ] && export OS="Arch";
 			[ -n "$(command -v xbps)" ] && export OS="Void";
-			[ -n "$(command -v dns)" ] && export OS="Redhat"; ;;
+			[ -n "$(command -v dnf)" ] && export OS="Redhat"; ;;
 	esac;
 fi;
 
 # Wayland support
 [ "$XDG_SESSION_TYPE" = 'wayland' ]\
 && export WAYLAND=1\
-&& export MOZ_ENABLE_WAYLAND=1;
+&& export MOZ_ENABLE_WAYLAND=1\
+&& export MOZ_DISABLE_RDD_SANDBOX=1;
 
 case "$SHELL" in
 	# For ksh family, e.g. ksh, mksh, loksh

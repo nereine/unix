@@ -1,0 +1,14 @@
+#!/bin/sh
+
+if [ -z $1 ]; then
+	sudo netstat -tulnp;
+else
+	prog=$(sudo netstat -tulnp | grep $1);
+	proc=$(echo $prog | awk '{print $NF}');
+	printf "$proc\n";
+
+	. $(command -v yn.sh);
+	simyn "Kill process?"\
+	&& targ=${proc%/*}\
+	&& kill $targ;
+fi

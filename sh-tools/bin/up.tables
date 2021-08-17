@@ -43,7 +43,6 @@ uplist() {
 	# Or multiple lines
 	uplistTable[Arch]="checkupdates ; ";
 	uplistTable[Arch]+="paru -Qu ; ";
-	uplistTable[Arch]+="yay -Qu";
 	uplistTable[Void]="sudo xbps-install -Suv";
 	uplistTable[Redhat]="sudo dnf check-update";
 	
@@ -93,7 +92,7 @@ upsys() {
 	upsysTable[OpenBSD]="doas fw_update;doas syspatch";
 	upsysTable[FreeBSD]="sudo freebsd-update fetch install";
 	upsysTable[Debian]="sudo apt update;sudo apt full-upgrade";
-	upsysTable[Arch]="yay -Syyuu";
+	upsysTable[Arch]="paru -Syyuu";
 	upsysTable[Void]="";
 	upsysTable[Redhat]="sudo dnf upgrade --refresh";
 	
@@ -106,12 +105,13 @@ upsys() {
 upclean() {
 	typeset -A cleanTable;
 	cleanTable[desc]="cleaning unwanted and outdated package cache and files";
-	cleanTable[Darwin]="brew cleanup";
+	cleanTable[Darwin]="brew cleanup --prune=all";
 	cleanTable[OpenBSD]="doas pkg_delete -a";
 	cleanTable[FreeBSD]="sudo pkg autoremove;sudo pkg clean -a";
 	cleanTable[Debian]="sudo apt autoremove;sudo apt autoclean";
 	cleanTable[Arch]="sudo pacman -Rns $(pacman -Qqdt | tr '\n' ' ');"
-	cleanTable[Arch]+="paru -Sc; yay -Sc";
+	cleanTable[Arch]+="sudo paccache -r; ";
+	cleanTable[Arch]+="paru -Sc";
 	cleanTable[Void]="sudo xbps-remove -Oo";
 	cleanTable[Redhat]="sudo dnf autoremove;sudo dnf clean all";
 	
@@ -126,7 +126,7 @@ upspecial() {
 	
 	specTable[git]="up-git"; # See https://gitlab.com/artnoi-staple/unix/sh-tools/bin/up-git
 	specTable[aur]+="paru -Syu";
-	specTable[y]+="yay -Syu";
+	specTable[y]+="paru -Syu";
 	
 	## Assign $cmd and its description
 	cmddesc+="Special command: ${specTable[$1]}";

@@ -21,6 +21,12 @@ alias ...='cd ../..';
 alias ....='cd ../../..';
 alias .....='cd ../../../..';
 
+# Programming
+alias gr='go run';
+alias gb='go build';
+alias py='python';
+alias cr='cargo run';
+
 # Shortcuts
 alias c='clear';
 alias v='vim';
@@ -32,6 +38,7 @@ alias gp='git push';
 alias da='doas';
 alias sw='sway';
 alias sx='startx';
+alias sgdm='sudo systemctl start gdm';
 alias hk='less .config/sxhkd/sxhkdrc';
 alias vim='vim -i /tmp/.viminfo';
 alias www='w3m'
